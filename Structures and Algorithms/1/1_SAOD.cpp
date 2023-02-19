@@ -177,39 +177,20 @@ char getCase()
 	}
 }
 
-//char getOneOrTwo()
-//{
-//	while (true)
-//	{
-//		std::cout << "Your choice is: ";
-//		std::string choice{};
-//		std::getline(std::cin, choice);
-//		if (choice == "1" || choice == "2")
-//		{
-//			return choice[0];
-//		}
-//		else
-//		{
-//			std::cout << '\n' << "Input error! Repeat, please: " << '\n';
-//		}
-//	}
-//}
-
-int getOneOrTwo()
+char getOneOrTwo()
 {
 	while (true)
 	{
 		std::cout << "Your choice is: ";
-		int choice{};
-		std::cin >> choice;
-		if (choice == 1 || choice == 2)
+		std::string choice{};
+		std::getline(std::cin, choice);
+		if (choice == "1" || choice == "2")
 		{
-			return choice;
+			return choice[0];
 		}
 		else
 		{
 			std::cout << '\n' << "Input error! Repeat, please: " << '\n';
-			return 0;
 		}
 	}
 }
@@ -220,40 +201,37 @@ void addElementToMainStack()
 		<< "1. Really creating a new element.\n"
 		<< "2. Selecting it from the top of the auxiliary stack.\n";
 
-	int answer{ getOneOrTwo()};
-	if (answer == 1)
+	switch (getOneOrTwo())
 	{
-		std::cout << "Please, enter the number: ";
-		int value{ getNumber() };
-		m_stackPointer = push(m_stackPointer, value);
-	}
-	else if (answer == 2) //doesn't work
-	{
-		if (isAuxiliaryEmpty())
-		{
-			std::cout << "Oh, it seems like the auxiliary stack is empty :(\n";
-		}
-		else
-		{
-			getElementsFromAuxiliaryStack();
-		}
-	}
-	else if (answer == 0)
-	{
-		std::cout << '\n';
+		case '1':
+			std::cout << "Please, enter the number: ";
+			//int value{ getNumber() };
+			m_stackPointer = push(m_stackPointer, getNumber());
+			break;
+		case '2':
+			if (isAuxiliaryEmpty())
+			{
+				std::cout << "Oh, it seems like the auxiliary stack is empty :(\n";
+			}
+			else
+			{
+				getElementsFromAuxiliaryStack();
+			}
+			break;
+
 	}
 }
 
 void deleteElementFromMainstack()
 {
-	int answ{ getOneOrTwo() };
-	if (answ == 1)//this too
+	switch (getOneOrTwo())
 	{
+	case '1':
 		pop();
-	}
-	else if(answ == 2)//this too
-	{
+		break;
+	case '2':
 		moveToAuxiliaryStack();
+		break;
 	}
 }
 
