@@ -1,18 +1,21 @@
 #include <iostream>
 #include <string>
 #include <random>
-//ring queue 
-inline constexpr int size{ 4 };
+
+namespace size
+{
+	inline constexpr int size{ 4 };
+}
 
 struct Queue
 {
-	int front{};//begin
-	int rear{};//end
-	int array[size];
-	int itemCount{0};
+	int front{-1};//begin
+	int rear{-1};//end
+	int array[size::size];
+	int itemCount{ 0 };
 
 	void EmptyCircularQueueInitialization();
-	bool isFull(); 
+	bool isFull();
 	bool isEmpty();
 
 	void enQueue(int item); //add
@@ -23,13 +26,13 @@ struct Queue
 
 void Queue::EmptyCircularQueueInitialization()
 {
-	front = 0;
-	rear = 0;
+	front = -1;
+	rear = -1;
 }
 
 bool Queue::isFull()
 {
-	if (itemCount >= size)
+	if (itemCount >= size::size)
 	{
 		return true;
 	}
@@ -41,15 +44,6 @@ bool Queue::isFull()
 
 bool Queue::isEmpty()
 {
-	/*if (front == 0 && rear == 0)
-	{
-		return true;
-	}*/
-	//if (front == (rear + 1) % size) //front=0, rear=3 or r=0, f=1
-	//{
-	//	return true;
-	//}
-
 	if (itemCount == 0)
 	{
 		return true;
@@ -62,75 +56,65 @@ bool Queue::isEmpty()
 
 void Queue::enQueue(int item) //add to the end
 {
-	/*if (isEmpty())
+	if (isFull())
 	{
-		array[rear] = item;
-	}*/
-	/*else if (rear < size - 1)
-	{
-		rear++;
-		array[rear] = item;
-	}*/
-	if(isFull())
-	{
-		std::cout << "Circular queue is full! You cannot enqueue new item!\n\n";
+		std::cerr << "\nThe circular queue is full! You cannot add new item!\n";
 	}
-	else if (isEmpty())
+	else
 	{
+		if (front == -1) front = 0;
+		rear = (rear + 1) % size::size;
 		array[rear] = item;
 		itemCount++;
 	}
-	else if(!isFull() && !isEmpty())
-	{
-		//rear = (rear + 1) % size; //(0+1)%4=1; (3+1)%4=0 - reset to zero - it works when rear = -1 so for class
-		rear = (rear + 1) % size;
-		array[rear] = item;
-		//if (rear == size)
-		//{
-		//	rear = 0;//reset to zero so we start from the "start"
-		//}
-		itemCount++;
-	}
+	
+	std::cout << '\n';
 }
 
 void Queue::deQueue() //delete
 {
 	if (isEmpty())
 	{
-		std::cout << "The circular queue is empty! You cannot dequeue!\n\n";
+		std::cout << "\nThe circular queue is empty! You cannot delete!\n";
 	}
-	else
-	{//????
-		int item = array[front];
-		array[front] = 0;
-		front++;
-		if (front == size)
-		{
-			front = 0;
-		}
+	else if (front==rear)
+	{
+		front = rear = -1;
 		itemCount--;
 	}
+	else if (front != rear)
+	{
+		array[front] = 0;
+		front=(front+1)%size::size;
+		itemCount--;
+	}
+
+	std::cout << '\n';
 }
 
 void Queue::show()
 {
+	int i;
 	if (!isEmpty())
 	{
-		for (int i{ 0 }; i < size; i++)
+		for (i = { front }; i!=rear; i=(i+1)%size::size)
 		{
 			std::cout << array[i] << "  ";
 		}
+		std::cout << array[i];
 	}
+
 	else
 	{
-		std::cout << "There is no elements in queue to show!\n\n";
+		std::cout << "There is no elements in queue to show!";
 	}
+
+	std::cout << "\n\n";
 }
 
 int getRandom()
 {
 	std::mt19937 mt{ std::random_device{}() };
-
 	std::uniform_int_distribution value(1, 20);
 	return value(mt);
 }
@@ -147,7 +131,7 @@ int getNumber()
 			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			std::cerr << "Input error, you did not enter a number. Repeat the input: \n";
 		}
-		else if (static_cast<int>(num) != num)//??? проверка на целое число
+		else if (static_cast<int>(num) != num)
 		{
 			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			std::cerr << "You entered a non-natural number. Repeat the input: \n ";
@@ -167,10 +151,10 @@ int getNumber()
 
 void MenuForChoices()
 {
-	std::cout << "\nWhat do you want to do?\n" <<
+	std::cout << "What do you want to do?\n" <<
 		"1) Check if the circular queue is empty.\n" <<
 		"2) Check if the circular queue is full.\n" <<
-		"3) Add the element to the end.\n" <<
+		"3) Add an element to the end.\n" <<
 		"4) Remove the first element.\n" <<
 		"5) Show.\n" <<
 		"6) Show front and rear elements\n" <<
@@ -196,6 +180,30 @@ char getCase()
 	}
 }
 
+void checkIfEmpty()
+{
+	if (queue.isEmpty())
+	{
+		std::cout << "\nThe circular queue is empty!\n\n";
+	}
+	else
+	{
+		std::cout << "\nThe circular queue is NOT empty!\n\n";
+	}
+}
+
+void checkIfFull()
+{
+	if (queue.isFull())
+	{
+		std::cout << "\nThe circular queue is full!\n\n";
+	}
+	else
+	{
+		std::cout << "\nThe circular queue is NOT full!\n\n";
+	}
+}
+
 void menu()
 {
 	bool cycle{ true };
@@ -203,25 +211,10 @@ void menu()
 		switch (getCase()) //here menu
 		{
 		case '1':
-			std::cout << '\n';
-			if (queue.isEmpty())
-			{
-				std::cout << "\nThe circular queue is empty!\n\n";
-			}
-			else
-			{
-				std::cout << "\nThe circular queue is NOT empty!\n\n";
-			}
+			checkIfEmpty();
 			break;
 		case '2':
-			if (queue.isFull())
-			{
-				std::cout << "\nThe circular queue is full!\n\n";
-			}
-			else
-			{
-				std::cout << "\nThe circular queue is NOT full!\n\n";
-			}
+			checkIfFull();
 			break;
 		case '3':
 			queue.enQueue(getRandom());
@@ -230,11 +223,11 @@ void menu()
 			queue.deQueue();
 			break;
 		case '5':
-			std::cout << "Your circular queue looks like that:\n";
+			std::cout << "\nYour circular queue looks like that:\n";
 			queue.show();
 			break;
 		case '6':
-			std::cout << '\n' << queue.front << " " << queue.rear << '\n';
+			std::cout << '\n' << queue.front << " " << queue.rear << '\n'<<queue.itemCount<<'\n';
 			break;
 		case '7':
 			cycle = false;
@@ -246,41 +239,5 @@ int main()
 {
 	queue.EmptyCircularQueueInitialization();
 	menu();
-	//queue.enQueue(5);
-	//std::cout << queue.rear << " " << queue.front << '\n';
-
-	//queue.enQueue(7);
-	//std::cout << queue.rear << " " << queue.front << '\n';
-
-	//queue.enQueue(4);
-	//std::cout << queue.rear << " " << queue.front << '\n';
-
-	//////queue.show();
-	//queue.enQueue(9);
-	//std::cout << queue.rear << " " << queue.front << '\n';
-
-	//queue.deQueue();
-	//std::cout << queue.rear << " " << queue.front << '\n';
-
-	//queue.deQueue();
-	//std::cout << queue.rear << " " << queue.front << '\n';
-
-	//////queue.deQueue();
-	//////queue.deQueue();
-	//////queue.deQueue();
-	//////std::cout << queue.rear<<" "<<queue.front << '\n';
-	//queue.enQueue(8);
-	//std::cout << queue.rear << " " << queue.front << '\n';
-
-	//queue.enQueue(6);
-	//std::cout << queue.rear << " " << queue.front << '\n';
-
-
-	//queue.show();
-	//std::cout << '\n';
-	//std::cout << queue.isEmpty();
-	//std::cout << queue.isFull();
-
 	return 0;
 }
-
