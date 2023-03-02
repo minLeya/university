@@ -5,17 +5,18 @@
 int getRandom()
 {
 	std::mt19937 mt{ std::random_device{}() };
-
 	std::uniform_int_distribution value(1, 10000);
 	return value(mt);
 }
 
 struct Stack
 {//it has the value that becomes the top of the stack
-	//that's why i called it "top"
-	int top{}; //the value in the one (this) node/struct/(rectangle of the memory(visialize a table from _that_presentation))
+	int top{}; //the value in the one (this) node/struct
 	Stack* next{}; //pointer to the next struct stack
-} *m_stackPointer, *m_auxiliaryStackPointer; //pointer to the head of the stack - to the last element - to the top of the stack
+}; 
+
+Stack* m_stackPointer;
+Stack* m_auxiliaryStackPointer; //pointer to the head of the stack - to the last element - to the top of the stack
 
 void emptyStackInitialization()
 {
@@ -27,20 +28,20 @@ bool isEmpty()
 {
 	if (m_stackPointer == nullptr)
 	{
-		return true;//1
+		return true;
 	}
 	else
-		return false;//0
+		return false;
 }
 
 bool isAuxiliaryEmpty()
 {
 	if (m_auxiliaryStackPointer == nullptr)
 	{
-		return true;//1
+		return true;
 	}
 	else
-		return false;//0
+		return false;
 }
 
 Stack* push(Stack* stackPointer, int newTop)
@@ -49,26 +50,17 @@ Stack* push(Stack* stackPointer, int newTop)
 	current->top = newTop; //initialization of a new value
 	current->next = stackPointer; //point to the previous node/element (we need to archieve the element before the last)
 	stackPointer = current; //making the new element the last element of the stack
-	return current;
+	return stackPointer;
 }
 
-int pop()
+void pop()
 {
-	if (isEmpty()) //if empty, then true; if not empty, then false;
-	{
-		return -1; //how can we delete nothing?
-		
-	}
-	else
-	{
-		//we need to delete current
-		Stack* current = m_stackPointer; //making from the last node/element/head/or tail? of the stack the "current"
-		//bc we cannot delete m_stackPointer
-		m_stackPointer = m_stackPointer->next; //so we need m_stackPointer to be the element before the last
-		//we can acsess it using next, bc the last node/tail points to the previous node
-		delete current;  //aand finally we delete current! good job
-		return 1;
-	}
+	//we need to delete current
+	Stack* current = m_stackPointer; //making from the last node/element/head/or tail? of the stack the "current"
+	//bc we cannot delete m_stackPointer
+	m_stackPointer = m_stackPointer->next; //so we need m_stackPointer to be the element before the last
+	//we can acsess it using next, bc the last node/tail points to the previous node
+	delete current;  //aand finally we delete current! good job
 }
 
 void show(Stack* stackPointer) 
@@ -83,10 +75,11 @@ void show(Stack* stackPointer)
 			std::cout << i << ". " << current->top << '\n';
 			current = current->next;
 		}
+		std::cout << "\n";
 	}
 	else
 	{
-		std::cout << "Stack is empty.\n";
+		std::cout << "Stack is empty.\n\n";
 	}
 }
 
@@ -102,7 +95,7 @@ int getNumber()
 			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			std::cerr << "Input error, you did not enter a number. Repeat the input: \n";
 		}
-		else if (static_cast<int>(num) != num)//??? проверка на целое число
+		else if (static_cast<int>(num) != num)
 		{
 			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			std::cerr << "You entered a non-natural number. Repeat the input: \n ";
@@ -122,40 +115,41 @@ int getNumber()
 
 void pushManyRandomValues()
 {
-	std::cout << "Enter the number of values to be entered into the stack: ";
+	std::cout << "Enter a number of values to be entered into the stack: ";
 	int number{ getNumber() };
 	for (int i{ 0 }; i < number; i++)
 	{
 		m_stackPointer = push(m_stackPointer, getRandom());
 	}
+	std::cout << "\n";
 }
 
 void moveToAuxiliaryStack() {
-	Stack* current = m_stackPointer;
-	m_stackPointer = m_stackPointer->next;
-	current->next = m_auxiliaryStackPointer;
-	m_auxiliaryStackPointer = current;
+	Stack* current = m_stackPointer; //temp for the last element of stack
+	m_stackPointer = m_stackPointer->next; //change the top of the main stack
+	current->next = m_auxiliaryStackPointer; 
+	m_auxiliaryStackPointer = current; //make from current the top of the aux stack
 }
 
 void getElementsFromAuxiliaryStack()
 {
-	Stack* current = m_auxiliaryStackPointer;
-	m_auxiliaryStackPointer = m_auxiliaryStackPointer->next;
-	current->next = m_stackPointer;
-	m_stackPointer = current;
+	Stack* current = m_auxiliaryStackPointer; //cuurent is the top from aux stack
+	m_auxiliaryStackPointer = m_auxiliaryStackPointer->next; //change the top of aux stack to the previous
+	current->next = m_stackPointer; //bond top with the previos
+	m_stackPointer = current; //so make top of stack is the elem from aux
 }
 
 void MenuForChoices()
 {
-	std::cout << "\nWhat do you want to do?" << '\n' <<
-		"1) Check if the main stack is empty." << '\n' <<
-		"2) Check if the auxiliary stack is empty." << '\n' <<
-		"3) Add the element to the top of the main stack." << '\n' <<
-		"4) Add several random elements to the top of the main stack." << '\n' <<
-		"5) Delete the element from the top of the main stack." << '\n' <<
-		"6) Show the main stack." << '\n' <<
-		"7) Show the auxiliary stack." << '\n' <<
-		"8) Exit." << '\n';
+	std::cout << "What do you want to do?\n" <<
+		"1) Check if the main stack is empty.\n" <<
+		"2) Check if the auxiliary stack is empty.\n" <<
+		"3) Add the element to the top of the main stack.\n" <<
+		"4) Add several random elements to the top of the main stack.\n" <<
+		"5) Delete the element from the top of the main stack.\n" <<
+		"6) Show the main stack.\n" <<
+		"7) Show the auxiliary stack.\n" <<
+		"8) Exit.\n";
 }
 
 char getCase()
@@ -172,7 +166,7 @@ char getCase()
 		}
 		else
 		{
-			std::cout << '\n' << "Input error! Repeat, please: " << '\n';
+			std::cout << "\nInput error! Repeat, please:\n";
 		}
 	}
 }
@@ -190,7 +184,7 @@ char getOneOrTwo()
 		}
 		else
 		{
-			std::cout << '\n' << "Input error! Repeat, please: " << '\n';
+			std::cout << "\nInput error! Repeat, please:\n";
 		}
 	}
 }
@@ -204,14 +198,14 @@ void addElementToMainStack()
 	switch (getOneOrTwo())
 	{
 		case '1':
-			std::cout << "Please, enter the number: ";
-			//int value{ getNumber() };
+			std::cout << "Please, enter a number: ";
 			m_stackPointer = push(m_stackPointer, getNumber());
+			std::cout << "\n";
 			break;
 		case '2':
 			if (isAuxiliaryEmpty())
 			{
-				std::cout << "Oh, it seems like the auxiliary stack is empty :(\n";
+				std::cout << "\nOh, it seems like the auxiliary stack is empty :(\n\n";
 			}
 			else
 			{
@@ -222,7 +216,7 @@ void addElementToMainStack()
 	}
 }
 
-void deleteElementFromMainstack()
+void DeleteOrRemoveFromMainstack()
 {
 	switch (getOneOrTwo())
 	{
@@ -235,6 +229,48 @@ void deleteElementFromMainstack()
 	}
 }
 
+void deleteElement()
+{
+	if (isEmpty())
+	{
+		std::cerr << "\nThe main stack is empty, you cannot delete elements!\n\n";
+	}
+	else
+	{
+		std::cout << "\nWhat to do with the top element?\n"
+			<< "1. Really delete with memory release.\n"
+			<< "2. Include it at the top of the auxiliary stack.\n";
+
+		DeleteOrRemoveFromMainstack();
+	}
+}
+
+void checkMainStack()
+{
+	std::cout << '\n';
+	if (isEmpty())
+	{
+		std::cout << "The main stack is empty!\n\n";
+	}
+	else
+	{
+		std::cout << "The main stack is NOT empty!\n\n";
+	}
+}
+
+void checkAuxiliaryStack()
+{
+	std::cout << '\n';
+	if (isAuxiliaryEmpty())
+	{
+		std::cout << "The auxiliary stack is empty!\n\n";
+	}
+	else
+	{
+		std::cout << "The auxiliary stack is NOT empty!\n\n";
+	}
+}
+
 void menu()
 {
 	bool cycle{ true };
@@ -242,27 +278,11 @@ void menu()
 		switch (getCase()) //here menu
 		{
 		case '1':
-			std::cout << '\n';
-			if (isEmpty())
-			{
-				std::cout << "The main stack is empty!\n\n";
-			}
-			else
-			{
-				std::cout << "The main stack is NOT empty!\n\n";
-			}
+			checkMainStack();
 			break;
 
 		case '2':
-			std::cout << '\n';
-			if (isAuxiliaryEmpty())
-			{
-				std::cout << "The auxiliary stack is empty!\n\n";
-			}
-			else
-			{
-				std::cout << "The auxiliary stack is NOT empty!\n\n";
-			}
+			checkAuxiliaryStack();
 			break;
 
 		case '3':
@@ -274,18 +294,7 @@ void menu()
 			break;
 
 		case '5':
-			if (isEmpty())
-			{
-				std::cout << "\nThe main stack is empty, you cannot delete elements!\n";
-			}
-			else
-			{
-				std::cout << "\nWhat to do with the top element?\n"
-					<< "1. Really delete with memory release.\n"
-					<< "2. Include it at the top of the auxiliary stack.\n";
-				
-				deleteElementFromMainstack();
-			}
+			deleteElement();
 			break;
 
 		case '6':
