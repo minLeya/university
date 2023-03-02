@@ -157,8 +157,7 @@ void MenuForChoices()
 		"3) Add an element to the end.\n" <<
 		"4) Remove the first element.\n" <<
 		"5) Show.\n" <<
-		"6) Show front and rear elements\n" <<
-		"7) Exit.\n";
+		"6) Exit.\n";
 }
 
 char getCase()
@@ -169,7 +168,7 @@ char getCase()
 		std::cout << "Your choice is: ";
 		std::string choice{};
 		std::getline(std::cin, choice);
-		if (choice == "1" || choice == "2" || choice == "3" || choice == "4" || choice == "5" || choice == "6" || choice == "7")
+		if (choice == "1" || choice == "2" || choice == "3" || choice == "4" || choice == "5" || choice == "6")
 		{
 			return choice[0];
 		}
@@ -227,9 +226,6 @@ void menu()
 			queue.show();
 			break;
 		case '6':
-			std::cout << '\n' << queue.front << " " << queue.rear << '\n'<<queue.itemCount<<'\n';
-			break;
-		case '7':
 			cycle = false;
 		}
 	}
