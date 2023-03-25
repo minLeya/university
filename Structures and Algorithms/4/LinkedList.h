@@ -16,9 +16,10 @@ struct LinkedList
 //main operations with list 
 bool isEmpty(LinkedList& list);
 bool isFull(LinkedList& list);
-void addElement(LinkedList& list, int newItem);
+void addElement(LinkedList& list);
 void deleteElement(LinkedList& list, int deleteItem);
 void showList(LinkedList& list);
 int searchForElement(LinkedList& list, int searchItem);
+int getValue();
 
 #endif // !LINKED_LIST_H

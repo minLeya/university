@@ -15,7 +15,14 @@ bool isFull(LinkedList& list)
 	else return false;
 }
 
-void addElement(LinkedList& list, int newItem)
+int getValue()
+{
+	int value{};
+	std::cin >> value;
+	return value;
+}
+
+void addElement(LinkedList& list)
 {
 	if (isFull(list))
 	{
@@ -24,12 +31,16 @@ void addElement(LinkedList& list, int newItem)
 	//if there is no element in list, a newItem will be the first
 	else if (isEmpty(list))
 	{
+		std::cout << "\nEnter the number to add: ";
+		int newItem = getValue();
 		list.array[0] = newItem;
 		list.itemCount++;
 	}
 	//search for the place starts
 	else if (!isEmpty(list) && !isFull(list)) //упорядоченный односвязный список
 	{
+		std::cout << "\nEnter the number to add: ";
+		int newItem = getValue();
 		int newIndex{ 0 };
 		int index{ 0 };
 		//search for the least
@@ -72,7 +83,7 @@ void deleteElement(LinkedList& list, int deleteItem)
 	}
 }
 
-void showList(LinkedList & list)//+
+void showList(LinkedList & list)
 {
 	if (isEmpty(list))
 	{
@@ -86,7 +97,6 @@ void showList(LinkedList & list)//+
 		}
 		std::cout << "\n";
 	}
-	
 }
 
 int searchForElement(LinkedList& list, int searchItem) 

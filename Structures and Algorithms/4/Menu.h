@@ -3,6 +3,7 @@
 #include "LinkedList.h"
 
 void menuForChoices();
+int getNumber();
 int getCase();
 void printIsEmpty(LinkedList& list);
 void printIsFull(LinkedList& list);
