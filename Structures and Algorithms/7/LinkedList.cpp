@@ -56,8 +56,9 @@ void addElement(Node* head)
 			newNode->data = newItem;
 			newNode->next = current;
 			newNode->prev = current->prev;
-			current->prev = newNode;
 			current->prev->next = newNode;
+			current->prev = newNode;
+			
 
 		}
 		else if (choice == 2)//after
@@ -120,5 +121,83 @@ void showList(Node* head, int option)
 			current = current->prev;
 		}
 		std::cout << '\n';
+	}
+	else
+	{
+		std::cout << "\nInput error!\n";
+	}
+}
+
+void deleteElement(Node* head)
+{
+	if (isEmpty(head))
+	{
+		std::cerr << "\nThe list is empty, you cannot delete!\n";
+		return;
+	}
+	std::cout << "\nEnter the number you want to delete: ";
+	int deleteItem{ getValue() }; 
+	Node* current{ head->next };
+
+	while (current != head && current->data != deleteItem)
+	{
+		current = current->next;
+	}
+
+	if (current == head)
+	{
+		std::cerr << "\nThere's no such element in the list!\n";
+	}
+	else//current is deleteItem element
+	{
+		current->prev->next = current->next;
+		current->next->prev = current->prev;
+		delete current;
+	}
+}
+
+int indexOfTheLastElement(Node* head)
+{
+	int index{ 0 };
+	Node* current{ head->next };
+	while (current != head)
+	{
+		current = current->next;
+		index++;
+	}
+	return index;
+}
+
+int searchForElement(Node* head, int option, int searchItem)
+{
+	if (option == 1)
+	{
+		int index{ 0 };
+		Node* current{ head->next };
+		while (current != head && current->data != searchItem)
+		{
+			current = current->next;
+			index++;
+		}
+		if (current == head)
+			return -1;
+		else return index;
+	}
+	else if (option == 2)
+	{
+		int index{ indexOfTheLastElement(head) };
+		Node* current{ head->prev };
+		while (current != head->next && current->data != searchItem)
+		{
+			current = current->prev;
+			index--;
+		}
+		if (current == head)
+			return -1;
+		else return index;
+	}
+	else
+	{
+		std::cout << "\nInput error!\n";
 	}
 }

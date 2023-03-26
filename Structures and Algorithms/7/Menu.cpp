@@ -8,7 +8,7 @@ void menuForChoices()
 		"2) Add the element.\n" <<
 		"3) Remove the element.\n" <<
 		"4) Search for the element.\n" <<
-		"5) Show the main list.\n" <<
+		"5) Show the list.\n" <<
 		"6) Exit.\n";
 }
 
@@ -51,31 +51,16 @@ void add(Node* head)
 	std::cout << '\n';
 }
 
-void remove(Node* head, Node* auxiliary)
+void remove(Node* head)
 {
 	if (isEmpty(head))
 	{
-		std::cerr << "\nThe list is empty, you cannot delete\n";
+		std::cerr << "\nThe list is empty, you cannot delete\n\n";
 	}
 	else
 	{
-		std::cout << "\nEnter 1 to delete the element, enter 2 to move element to auxiliary list: ";
-		int choice{ getChoice() };
 		show(head);
-		if (choice == 1)
-		{
-			deleteElement(head);
-			std::cout << '\n';
-		}
-		else if (choice == 2)
-		{
-			moveElement(head, auxiliary);
-			std::cout << '\n';
-		}
-		else
-		{
-			std::cout << "\ninput error, please repeat!\n";
-		}
+		deleteElement(head);
 	}
 }
 
@@ -84,17 +69,22 @@ void search(Node* head)
 	if (isEmpty(head))
 	{
 		std::cout << "\nThe list is empty, you cannot search!\n\n";
+		return;
 	}
+	
+	std::cout << "\nEnter 1 to search in the forward, 2 - int the reverse direction: ";
+	int option{};
+	std::cin >> option;
+
+	std::cout << "\nEnter the number you want to find in list: ";
+	int number{ getNumber() };
+
+	int index = searchForElement(head, option, number);
+	if (index != -1)
+		std::cout << number << " is found, it's index is " << index << "\n\n";
 	else
-	{
-		std::cout << "\nEnter the number you want to find in list: ";
-		int number{ getChoice() };
-		int index = searchForElement(head, number);
-		if (index != -1)
-			std::cout << number << "is found, it's index is " << index << '\n';
-		else
-			std::cout << "There is no element in list!\n";
-	}
+		std::cout << "\nThere is no such element in list!\n";
+
 }
 
 void show(Node* head)
@@ -105,13 +95,14 @@ void show(Node* head)
 		return;
 	}
 	std::cout << "\nEnter 1 to print the list in the forward, 2 - in the reverse direction: ";
-	int option{ getNumber() };
-	std::cout << "\nThe list looks like that:\n";
+	int option{};
+	std::cin >> option;
+	std::cout << "\n";
 	showList(head, option);
 	std::cout << '\n';
 }
 
-void menu(Node* head, Node* auxiliary)
+void menu(Node* head)
 {
 	bool cycle{ true };
 	while (cycle) {
@@ -126,9 +117,8 @@ void menu(Node* head, Node* auxiliary)
 			break;
 
 		case 3:
-			remove()
-				break;
-
+			remove(head);
+			break;
 
 		case 4:
 			search(head);
@@ -137,7 +127,6 @@ void menu(Node* head, Node* auxiliary)
 		case 5:
 			show(head);
 			break;
-
 
 		case 6:
 			cycle = false;
