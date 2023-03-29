@@ -1,18 +1,18 @@
 #include "LinkedList.h"
 #include <iostream>
-//2, 3, 5 tasks from chapter 3
+//2 task from chapter 3
+//упорядоченный односвязный список на основе массива, стастистическое распределение памяти
+//добавление до и после заданного элемента со сдвигом
+//удаление элемента со сдвигом
+
 bool isEmpty(LinkedList& list)
 {
-	if (list.itemCount == 0)
-		return true;
-	else return false;
+	return (list.itemCount == 0);
 }
 
 bool isFull(LinkedList& list)
 {
-	if (list.itemCount == size::size)
-		return true;
-	else return false;
+	return (list.itemCount == size::size);
 }
 
 int getValue()
@@ -41,26 +41,24 @@ void addElement(LinkedList& list)
 	{
 		std::cout << "\nEnter the number to add: ";
 		int newItem = getValue();
-		int newIndex{ 0 };
 		int index{ 0 };
 		//search for the least
 		while (list.array[index] < newItem && index < list.itemCount) //обнаружение первого элемента, большего заданного.
 		{//поиск индекса элемента который больше заданного
-			newIndex++;
 			index++;
 		}
-		if (newIndex == size::size - 1) //or while newItem is bigger than all items
+		if (index == size::size - 1) //or while newItem is bigger than all items
 		{//если все элементы меньше заданного, он ставится в конец списка
-			list.array[newIndex] = newItem;
+			list.array[index] = newItem;
 			list.itemCount++;
 		}
 		else
 		{//если нашелся элемент больше заданного в середине/начале списка, происходит сдвиг вправо для освобождения 
 			//ячейки массива для нового элемента
-			for (int i{ list.itemCount }; i > newIndex; i--) 
-				list.array[i] = list.array[i - 1]; //перенос больших значений вправо
+			for (int i{ list.itemCount }; i > index; i--) 
+				list.array[i] = list.array[i - 1]; //перенос бо'льших значений вправо
 
-			list.array[newIndex] = newItem;
+			list.array[index] = newItem;
 			list.itemCount++;
 		}
 	}
@@ -72,7 +70,7 @@ void deleteElement(LinkedList& list, int deleteItem)
 	if (deleteIndex != - 1)
 	{
 		list.itemCount--;
-		for (int i{ deleteIndex }; i < list.itemCount; i++)
+		for (int i{ deleteIndex }; i < list.itemCount; i++) // сдвиг
 		{
 			list.array[i] = list.array[i + 1];
 		}

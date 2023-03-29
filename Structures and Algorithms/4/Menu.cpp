@@ -88,7 +88,7 @@ void search(LinkedList& list)
 		std::cin >> number;
 		int index = searchForElement(list, number);
 		if (index != -1)
-			std::cout << number << " is found, it's index is " << index << '\n';
+			std::cout << number << " is found " << '\n';
 		else
 			std::cout << "There is no element in list!\n";
 	}
