@@ -82,7 +82,7 @@ void search(LinkedList& list)
 		std::cin >> number;
 		int index = searchForElement(list, number);
 		if (index != -1)
-			std::cout << number << "is found, it's index is " << index << '\n';
+			std::cout << number << " is found" << "\n\n";
 		else
 			std::cout << "There is no element in list!\n";
 	}
@@ -91,8 +91,10 @@ void search(LinkedList& list)
 void show(LinkedList& list)
 {
 	if (isEmpty(list))
+	{
 		std::cerr << "\nThe list is empty!\n\n";
 		return;
+	}	
 
 	std::cout << "\nThe list looks like that:\n";
 	showList(list);

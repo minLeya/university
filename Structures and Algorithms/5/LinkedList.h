@@ -12,7 +12,7 @@ namespace constants
 struct Node
 {
 	int data{};
-	int next{}; //-1 if free, 1 if not
+	int next{}; //-1 if free
 };
 
 struct LinkedList

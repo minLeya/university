@@ -1,22 +1,23 @@
 #include "LinkedList.h"
+// односвязный список на основе массива с указателями-индексами и заголовком, статистическое распределение памяти
+// добавление до и после
+//-1 - свободные
 
 void initialize(LinkedList& list)
 {
-	list.array[0].data = list.array[0].next = 0;
-	for (int i{ 1 }; i < constants::size + 1; i++) //0-ой элемент - заголовок
-		list.array[i].next = -1;
+	list.array[0].data = list.array[0].next = 0; //0-ой элемент - заголовок
+	for (int i{ 1 }; i < constants::size + 1; i++) 
+		list.array[i].next = -1; //все пустые
 }
 
 bool isEmpty(LinkedList& list)
 {
-	if (list.itemCount == 0) return true;
-	else return false;
+	return (list.itemCount == 0);
 }
 
 bool isFull(LinkedList& list)
 {
-	if (list.itemCount == constants::size) return true;
-	else return false;
+	return (list.itemCount == constants::size);
 }
 
 int getChoice()
@@ -37,7 +38,7 @@ int findPrevious(LinkedList& list, int currentItem)
 {
 	int previousIndex{ 0 };
 	int currentIndex{ list.array[0].next };
-	while (currentIndex != 0)
+	while (currentIndex != 0) 
 	{
 		if (list.array[currentIndex].data == currentItem)
 			break;
@@ -48,7 +49,7 @@ int findPrevious(LinkedList& list, int currentItem)
 	return previousIndex;
 }
 
-void addElement(LinkedList& list) //before and after element :(
+void addElement(LinkedList& list) //before and after element
 {
 	if (isFull(list))
 	{
@@ -72,7 +73,7 @@ void addElement(LinkedList& list) //before and after element :(
 		int currentItem{ getValue() };
 		int index{ searchForElement(list, currentItem) };
 
-		if (index == -1)
+		if (index == -2)
 		{
 			std::cerr << "\nThere is no such element\n";
 		}
@@ -114,9 +115,9 @@ void addElement(LinkedList& list) //before and after element :(
 					i++;
 				}
 				list.array[i].data = newItem;
-				list.array[i].next = list.array[index].next;
+				list.array[i].next = list.array[index].next; //ring
 				list.array[index].next = i;
-				list.itemCount++;
+				list.itemCount++; 
 			}
 
 			else
@@ -158,7 +159,7 @@ void showList(LinkedList& list)
 	}
 	else
 	{
-		for (int i{ list.array[0].next }; i != 0; i = list.array[i].next)
+		for (int i{ list.array[0].next }; i != 0; i = list.array[i].next) 
 			std::cout << list.array[i].data << ' ';
 		std::cout << "\n";
 	}
@@ -166,10 +167,10 @@ void showList(LinkedList& list)
 
 int searchForElement(LinkedList& list, int searchItem)
 {
-	for (int index{ list.array[0].next }; index != 0; index = list.array[index].next)
+	for (int index{ list.array[0].next }; index != 0; index = list.array[index].next) 
 	{
 		if (list.array[index].data == searchItem)
 			return index;
 	}
-	return -1;
+	return -2;
 }
