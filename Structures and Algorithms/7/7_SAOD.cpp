@@ -1,6 +1,6 @@
 ﻿#include <iostream>
 #include "Menu.h"
-//линейный динамический двунаправленный список с заголовочным элементом
+//линейный динамический двунаправленный список с закольцованным заголовочным элементом
 
 
 int main()
@@ -9,5 +9,6 @@ int main()
 	head->next = head;
 	head->prev = head;
 	menu(head);
+	freeUpMemory(head);
 	return 0;
 }

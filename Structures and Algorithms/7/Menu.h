@@ -4,7 +4,6 @@
 
 void menuForChoices();
 int getNumber();
-int getOption();
 int getCase();
 void printIsEmpty(Node* head);
 void add(Node* head);

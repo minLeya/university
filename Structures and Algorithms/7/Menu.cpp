@@ -59,7 +59,8 @@ void remove(Node* head)
 	}
 	else
 	{
-		show(head);
+		std::cout << "\nThe list in forward direction look like that: ";
+		showList(head, 1);
 		deleteElement(head);
 	}
 }
@@ -81,7 +82,7 @@ void search(Node* head)
 
 	int index = searchForElement(head, option, number);
 	if (index != -1)
-		std::cout << number << " is found, it's index is " << index << "\n\n";
+		std::cout << number << " is found " << "\n\n";
 	else
 		std::cout << "\nThere is no such element in list!\n";
 

@@ -1,6 +1,8 @@
 #include "LinkedList.h"
 #include <iostream>
 
+//линейный динамический двунаправленный кольцевой список с заголовком
+
 int getValue()
 {
 	int value{};
@@ -29,6 +31,8 @@ void addElement(Node* head)
 	}
 	else
 	{
+		std::cout << "\nThe list in forward direction looks like that: \n";
+		showList(head, 1);
 		std::cout << "\nEnter 1 to add before element, enter 2 to add after: ";
 		int choice{ getValue() };
 
@@ -59,7 +63,6 @@ void addElement(Node* head)
 			current->prev->next = newNode;
 			current->prev = newNode;
 			
-
 		}
 		else if (choice == 2)//after
 		{
@@ -135,7 +138,7 @@ void deleteElement(Node* head)
 		std::cerr << "\nThe list is empty, you cannot delete!\n";
 		return;
 	}
-	std::cout << "\nEnter the number you want to delete: ";
+	std::cout << "Enter the number you want to delete: ";
 	int deleteItem{ getValue() }; 
 	Node* current{ head->next };
 
@@ -199,5 +202,16 @@ int searchForElement(Node* head, int option, int searchItem)
 	else
 	{
 		std::cout << "\nInput error!\n";
+	}
+}
+
+void freeUpMemory(Node* head)
+{
+	Node* current{};
+	while (head != nullptr)
+	{
+		current = head;
+		head = head->next;
+		delete current;
 	}
 }

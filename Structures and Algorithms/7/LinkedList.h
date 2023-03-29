@@ -16,6 +16,6 @@ void deleteElement(Node* head);
 int indexOfTheLastElement(Node* head);
 int searchForElement(Node* head, int option, int searchItem);
 int getValue();
-
+void freeUpMemory(Node* head);
 
 #endif // !LINKEDLIST_H
