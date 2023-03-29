@@ -1,6 +1,5 @@
 #include "Menu.h"
 #include <iostream>
-#include <string>
 
 void menuForChoices()
 {
@@ -90,13 +89,14 @@ void search(Node* head)
 	}
 	else
 	{
-		std::cout << "\nEnter the number you want to find in list: ";
+		show(head);
+		std::cout << "Enter the number you want to find in list: ";
 		int number{ getChoice() };
 		int index = searchForElement(head, number);
 		if (index != -1)
-			std::cout << number << "is found, it's index is " << index << '\n';
+			std::cout << number << " is found " << "\n\n";
 		else
-			std::cout << "There is no element in list!\n";
+			std::cout << "\nThere is no such element in list!\n";
 	}
 }
 

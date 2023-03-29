@@ -1,11 +1,13 @@
 #include "LinkedList.h"
 #include <iostream>
 
+//односвязный линейный список c заголовочным элементом без кольца, динамическое распределение памяти
+//есть вспомогательный список - stack, куда заносятся удаленные с главного списка элементы 
+//функция перемещения`
+
 bool isEmpty(Node* head)
 {
-	if (head->next == nullptr)
-		return true;
-	else return false;
+	return (head->next == nullptr);
 }
 
 int getChoice()
@@ -167,17 +169,18 @@ void moveElement(Node* head, Node* auxiliary)
 	}
 	else
 	{
-		Node* temp{ current };
-		temp->next = auxiliary->next;
+
 		previous->next = current->next;
-		auxiliary->next = temp;
+		current->next = auxiliary->next;
+		auxiliary->next = current;
+	
 	}
 }
 
 int searchForElement(Node* head, int searchItem)
 {
 	Node* current{ head->next };
-	int index{ 0 };
+	int index{ 1 };
 	while (current != nullptr && current->data != searchItem)
 	{
 		current = current->next;
@@ -185,7 +188,6 @@ int searchForElement(Node* head, int searchItem)
 	}
 	if (current == nullptr)
 		return -1;
-	/*std::cout << "\nThere's no such element!\n";*/
 
 	else return index;
 }
