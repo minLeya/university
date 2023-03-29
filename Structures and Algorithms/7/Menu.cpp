@@ -59,9 +59,10 @@ void remove(Node* head)
 	}
 	else
 	{
-		std::cout << "\nThe list in forward direction look like that: ";
+		std::cout << "\nThe list in forward direction look like that:\n";
 		showList(head, 1);
 		deleteElement(head);
+		std::cout << '\n';
 	}
 }
 
