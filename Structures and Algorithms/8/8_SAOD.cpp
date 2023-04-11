@@ -4,15 +4,6 @@
 
 int main()
 {
-    NodeOfList* listHead{ new NodeOfList{} };
-    listHead->head = new Node{};
-    listHead->head->next = listHead->head;
-    listHead->head->prev = listHead->head;
-    listHead->next = listHead;
-    listHead->prev = listHead;
-
-
-    menu(listHead);
-
+    run();
     return 0;
 }

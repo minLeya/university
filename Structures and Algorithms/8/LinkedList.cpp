@@ -293,39 +293,21 @@ void deleteSublist(Node* sublistHead)
 	}
 }
 
-//int searchInList(NodeOfList* listHead, int searchItem)
-//{
-//	int subIndex{};
-//	int index{ 1 };
-//	NodeOfList* current{ listHead->next };
-//	while (current != listHead && current->listData != searchItem)
-//	{
-//		subIndex = searchInSublist(current->head, searchItem);
-//		current = current->next;
-//		index++;
-//	}
-//	if (current == listHead && subIndex == -1) //no such element in the list and sublist
-//		return -1;
-//	else if (current == listHead && subIndex != -1)
-//		return index;
-//	else if (current != listHead && subIndex == -1)
-//		return index;
-//	else if (current != listHead && subIndex != -1)
-//		return index;
-//}
-
-int searchInSublist(Node* sublistHead, int searchItem)
+bool findInList(const Node* head, int itemToFind)
 {
-	Node* temp{ sublistHead->next };
-
-	int index{1};
-	//Node* temp{ sublistHead->next };
-	while (temp != sublistHead && sublistHead->data != searchItem)
+	Node* current{ nullptr };
+	int index{};
+	current = head->next;
+	index = 0;
+	while (current != head && current->data != itemToFind)
 	{
-		temp = temp->next;
-		index++;
+		current = current->next;
+		++index;
 	}
-	if (temp == sublistHead)
-		return -1;
-	else return index;
+
+	if (current == head)
+		return false;
+
+	std::cout << "\nvalue " << itemToFind << " was found at index " << index << '\n';
+	return true;
 }

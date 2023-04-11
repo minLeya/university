@@ -13,7 +13,7 @@ struct Node //sublist
 struct NodeOfList //list
 {
 	int listData{};
-	Node* head{ nullptr }; //ref to the sublist
+	Node* head{ nullptr }; //pointer to the sublist's head
 	NodeOfList* next{ nullptr };
 	NodeOfList* prev{ nullptr };
 };
@@ -28,7 +28,6 @@ void showMainList(NodeOfList* listHead);
 void removeElementFromMainList(NodeOfList* listHead);
 void removeElementFromSublist(Node* sublistHead);
 void deleteSublist(Node* sublistHead);
-int searchInList(NodeOfList* listHead, int searchItem);
-int searchInSublist(Node* sublistHead, int searchItem);
+bool findInList(const Node* head, int itemToFind);	
 
 #endif // !LINKEDLIST_H

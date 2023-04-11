@@ -95,8 +95,9 @@ void removeFromSublist(NodeOfList* listHead)
 	std::cout << '\n';
 }
 
-void search(NodeOfList* listHead)
+void search(NodeOfList* listHead) //only in sublists
 {
+
 	if (isListEmpty(listHead))
 	{
 		std::cerr << "\nThe list is empty, cannot search!\n";
@@ -107,20 +108,25 @@ void search(NodeOfList* listHead)
 	int searchItem{ getNumber() };
 
 	NodeOfList* current{ listHead->next };
+	
+	int numberOfFoundElements{ 0 };
 	while (current != listHead)
 	{
-
-		int index{ searchInSublist(current->head, searchItem) };
-		if (index != -1)
-			std::cout << searchItem << " is found " << "\n\n";
-		else
-			std::cout << "\nThere is no such element in list!\n";
+		if (findInList(current->head, searchItem))
+		{
+			std::cout << "found element with value " << searchItem << " in list with id " <<
+				current->listData << '\n';
+			++numberOfFoundElements;
+		}
 
 		current = current->next;
 	}
 
+	if (numberOfFoundElements == 0)
+		std::cout << "\ncouldn't find value " << searchItem << " in any of the lists\n";
+	else
+		std::cout << "\nfound " << numberOfFoundElements << " elements in total\n\n";
 }
-
 
 void showList(NodeOfList* listHead)
 {
@@ -157,4 +163,17 @@ void menu(NodeOfList* listHead)
 			cycle = false;
 		}
 	}
+}
+
+void run()
+{
+	NodeOfList* listHead{ new NodeOfList{} };
+	listHead->head = new Node{};
+	listHead->head->next = listHead->head;
+	listHead->head->prev = listHead->head;
+	listHead->next = listHead;
+	listHead->prev = listHead;
+
+
+	menu(listHead);
 }
