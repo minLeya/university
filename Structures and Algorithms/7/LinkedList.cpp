@@ -161,7 +161,7 @@ void deleteElement(Node* head)
 
 int indexOfTheLastElement(Node* head)
 {
-	int index{ 0 };
+	int index{ 1 };
 	Node* current{ head->next };
 	while (current != head)
 	{
@@ -175,7 +175,7 @@ int searchForElement(Node* head, int option, int searchItem)
 {
 	if (option == 1)
 	{
-		int index{ 0 };
+		int index{ 1 };
 		Node* current{ head->next };
 		while (current != head && current->data != searchItem)
 		{

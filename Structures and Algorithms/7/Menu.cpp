@@ -4,12 +4,12 @@
 void menuForChoices()
 {
 	std::cout << "What do you want to do?\n" <<
-		"1) Check if the list is empty.\n"
-		"2) Add the element.\n" <<
-		"3) Remove the element.\n" <<
-		"4) Search for the element.\n" <<
-		"5) Show the list.\n" <<
-		"6) Exit.\n";
+		"1. Check if the list is empty.\n"
+		"2. Add the element.\n" <<
+		"3. Remove the element.\n" <<
+		"4. Search for the element.\n" <<
+		"5. Show the list.\n" <<
+		"6. Exit.\n";
 }
 
 int getNumber()
