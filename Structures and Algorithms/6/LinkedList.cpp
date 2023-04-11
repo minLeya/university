@@ -3,7 +3,7 @@
 
 //односвязный линейный список c заголовочным элементом без кольца, динамическое распределение памяти
 //есть вспомогательный список - stack, куда заносятся удаленные с главного списка элементы 
-//функция перемещения`
+//+ функция перемещения
 
 bool isEmpty(Node* head)
 {
@@ -113,10 +113,6 @@ void showList(Node* head)
 			std::cout << current->data << ' ';
 			current = current->next;
 		}
-		/*for (Node* current{ head->next }; current != nullptr; current->next)
-		{
-			std::cout << current->data << " ";
-		}*/
 	}
 }
 
@@ -169,11 +165,9 @@ void moveElement(Node* head, Node* auxiliary)
 	}
 	else
 	{
-
 		previous->next = current->next;
 		current->next = auxiliary->next;
 		auxiliary->next = current;
-	
 	}
 }
 

@@ -4,14 +4,14 @@
 void menuForChoices()
 {
 	std::cout << "What do you want to do?\n" <<
-		"1) Check if the main list is empty.\n" 
-		"2) Check if the auxiliary list is empty.\n" <<
-		"3) Add the element.\n" <<
-		"4) Remove the element.\n" <<
-		"5) Search for the element.\n" <<
-		"6) Show the main list.\n" <<
-		"7) Show the auxiliary list.\n" <<
-		"8) Exit.\n";
+		"1. Check if the main list is empty.\n" 
+		"2. Check if the auxiliary list is empty.\n" <<
+		"3. Add the element.\n" <<
+		"4. Remove the element.\n" <<
+		"5. Search for the element.\n" <<
+		"6. Show the main list.\n" <<
+		"7. Show the auxiliary list.\n" <<
+		"8. Exit.\n";
 }
 
 int getNumber()
@@ -61,23 +61,10 @@ void remove(Node* head, Node* auxiliary)
 	}
 	else
 	{
-		std::cout << "\nEnter 1 to delete the element, enter 2 to move element to auxiliary list: ";
-		int choice{ getChoice() };
 		show(head);
-		if (choice == 1)
-		{
-			deleteElement(head);
-			std::cout << '\n';
-		}
-		else if (choice == 2)
-		{
-			moveElement(head, auxiliary);
-			std::cout << '\n';
-		}
-		else
-		{
-			std::cout << "\ninput error, please repeat!\n";
-		}
+		
+		moveElement(head, auxiliary);
+		std::cout << '\n';
 	}
 }
 
