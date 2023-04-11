@@ -15,13 +15,13 @@ void menu()
 		addNodes(root, number);
 
 		std::cout << "\nin direct order:\n";
-		printTreeInDirectOrder(root, 1);
+		printTreeInDirectOrder(root, 0);
 
 		std::cout << "\nin symmetric order:\n";
-		printTreeInSymmetricOrder(root, 1);
+		printTreeInSymmetricOrder(root, 0);
 		
 		std::cout << "\nin backward symmetric order:\n";
-		printTreeInBackwardSymmetricOrder(root, 1);
+		printTreeInBackwardSymmetricOrder(root, 0);
 
 		int choice{};
 		std::cout << "\nenter 1 to exit\n";
