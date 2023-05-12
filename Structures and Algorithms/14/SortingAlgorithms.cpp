@@ -102,52 +102,53 @@ void insertionSort(std::vector<int> numbers)
 
 void heapify(std::vector<int>& numbers, int size, int i, int& numberOfComparisons, int& numberOfAssignments)
 {
-	int largest{ i }; //РєРѕСЂРµРЅСЊ
+	int largest{ i }; //корень
 	int left{ 2 * i + 1 };
 	int right{ 2 * i + 2 };
-	//РµСЃР»Рё Р»РµРІС‹Р№ РґРѕС‡РµСЂРЅРёР№ СЌР»РµРјРµРЅС‚ Р±РѕР»СЊС€Рµ РєРѕСЂРЅСЏ
+	//если левый дочерний элемент больше корня
 	if (left < size && numbers[left] > numbers[largest])
 	{
 		largest = left;
 		++numberOfComparisons;
 	}
 		
-	//РµСЃР»Рё РїСЂР°РІС‹Р№ РґРѕС‡РµСЂРЅРёР№ СЌРґРµРјРµРЅС‚ Р±РѕР»СЊС€Рµ 
+	//если правый дочерний элемент больше 
 	if (right < size && numbers[right] > numbers[largest])
 	{
 		largest = right;
 		++numberOfComparisons;
 	}
-	//РµСЃР»Рё СЃР°РјС‹Р№ Р±РѕР»СЊС€РѕР№ СЌР»РµРјРµРЅС‚ РЅРµ РєРѕСЂРµРЅСЊ
+	//если самый большой элемент не корень
 	if (largest != i)
 	{
 		std::swap(numbers[i], numbers[largest]);
 		numberOfAssignments += 3;
-		//Р РµРєСѓСЂСЃРёРІРЅРѕ РїСЂРµРѕР±СЂР°Р·СѓРµРј РІ РґРІРѕРёС‡РЅСѓСЋ РєСѓС‡Сѓ Р·Р°С‚СЂРѕРЅСѓС‚РѕРµ РїРѕРґРґРµСЂРµРІРѕ
+		//Рекурсивно преобразуем в двоичную кучу затронутое поддерево
 		heapify(numbers, size, largest, numberOfComparisons, numberOfAssignments);
 	}
 }
 
+//пирамидальная сортировка
 void heapSort(std::vector<int> numbers)
 {
 	int numberOfComparisons{ 0 };
 	int numberOfAssignments{ 0 };
 
 	int size{static_cast<int>(numbers.size()) };//it was size_t
-	// РџРѕСЃС‚СЂРѕРµРЅРёРµ РєСѓС‡Рё (РїРµСЂРµРіСЂСѓРїРїРёСЂСѓРµРј РјР°СЃСЃРёРІ)
+	// Построение кучи (перегруппируем массив)
 	for (int i{ size / 2 - 1 }; i >= 0; --i)
 		heapify(numbers, size, i, numberOfComparisons, numberOfAssignments);
 
-	// РћРґРёРЅ Р·Р° РґСЂСѓРіРёРј РёР·РІР»РµРєР°РµРј СЌР»РµРјРµРЅС‚С‹ РёР· РєСѓС‡Рё
+	// Один за другим извлекаем элементы из кучи
 	for (int i{ size - 1 }; i >= 0; --i)
 	{
 		if (numbers[0] != numbers[i])
 		{
-			// РџРµСЂРµРјРµС‰Р°РµРј С‚РµРєСѓС‰РёР№ РєРѕСЂРµРЅСЊ РІ РєРѕРЅРµС†
+			// Перемещаем текущий корень в конец
 			std::swap(numbers[0], numbers[i]);
 			numberOfAssignments += 3;
 		}
-		// РІС‹Р·С‹РІР°РµРј РїСЂРѕС†РµРґСѓСЂСѓ heapify РЅР° СѓРјРµРЅСЊС€РµРЅРЅРѕР№ РєСѓС‡Рµ
+		// вызываем процедуру heapify на уменьшенной куче
 		heapify(numbers, i, 0, numberOfComparisons, numberOfAssignments);
 	}
 
@@ -157,39 +158,7 @@ void heapSort(std::vector<int> numbers)
 	std::cout << "number of assignments: " << numberOfAssignments << '\n';
 }
 
-//void shellSort(std::vector<int>numbers)
-//{
-//	int numberOfComparisons{ 0 };
-//	int numberOfAssignments{ 0 };
-//
-//	int size{ static_cast<int>(numbers.size()) };
-//
-//	for (int gap{ size / 2 }; gap > 0; gap /= 2)
-//	{
-//		for (int i{ gap }; i < size; ++i)
-//		{
-//			++numberOfAssignments;
-//			int temporary{ numbers[i] };
-//
-//			int j{ 0 };
-//			++numberOfComparisons;
-//			for (j = i; j >= gap && numbers[j - gap] > temporary; j -= gap)
-//			{
-//				++numberOfAssignments;
-//				++numberOfComparisons;
-//				numbers[j] = numbers[j - gap];
-//			}
-//			numbers[j] = temporary;
-//			++numberOfAssignments;
-//		}
-//	}
-//
-//	std::cout << "\nsorted:\n";
-//	printVector(numbers);
-//	std::cout << "number of comparisons: " << numberOfComparisons << '\n';
-//	std::cout << "number of assignments: " << numberOfAssignments << '\n';
-//}
-
+//сортировка шелла
 void shellSort(std::vector<int>numbers)
 {
 	int numberOfComparisons{ 0 };
@@ -224,42 +193,7 @@ void shellSort(std::vector<int>numbers)
 	std::cout << "number of assignments: " << numberOfAssignments << '\n';
 }
 
-//int partition(std::vector<int>numbers, int start, int end, int& numberOfComparisons, int& numberOfAssignments)
-//{
-//	//Р’С‹Р±РёСЂР°РµРј РєСЂР°Р№РЅРёР№ РїСЂР°РІС‹Р№ СЌР»РµРјРµРЅС‚ РІ РєР°С‡РµСЃС‚РІРµ РѕРїРѕСЂРЅРѕРіРѕ СЌР»РµРјРµРЅС‚Р° РјР°СЃСЃРёРІР°
-//	int pivot{ numbers[end] }; 
-//	int index{ start };
-//
-//	for (int i{ start }; i < end; ++i)
-//	{
-//		if (numbers[i] <= pivot)
-//		{
-//			++numberOfComparisons;
-//			std::swap(numbers[i], numbers[index]);
-//			numberOfAssignments += 3;
-//			++index;
-//		}
-//	}
-//	std::swap(numbers[index], numbers[end]);
-//	numberOfAssignments += 3;
-//	return index;
-//}
-//
-//void quickSort(std::vector<int>numbers, int start, int end, int& numberOfComparisons, int& numberOfAssignments)
-//{
-//
-//	if (start >= end)
-//	{
-//		return;
-//	}
-//
-//	int pivot{ partition(numbers, start, end, numberOfComparisons, numberOfAssignments) };
-//	quickSort(numbers, start, pivot - 1, numberOfComparisons, numberOfAssignments);
-//	quickSort(numbers, start, pivot + 1, numberOfComparisons, numberOfAssignments);
-//
-//}
-
-//РѕРіСЂРѕРјРЅРѕРµ СЃРїР°СЃРёР±Рѕ, Р Р°СЃРёРј, С‚С‹ Р±РѕРі
+//быстрая сортировка
 void quickSort(std::vector<int>& numbers, int left, int right, int& numberOfComparisons, int& numberOfAssignments)
 {
 	int pivot{ numbers[(left + right) / 2] };
