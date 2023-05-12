@@ -18,25 +18,27 @@ void bubbleSort(std::vector<int> numbers)
 	int numberOfComparisons{ 0 };
 	int numberOfAssignments{ 0 };
 
-	for (std::size_t i{ 0 }; i < numbers.size(); ++i)
+	for (std::size_t i{ 0 }; i < numbers.size() - 1; ++i)
 	{
-		for (std::size_t j{ 0 }; j < numbers.size() - (i + 1); ++j)
+		for (std::size_t j{ 0 }; j < numbers.size() - i - 1; ++j)
 		{
 			++numberOfComparisons;
 			if (numbers[j] > numbers[j + 1])
 			{
-				std::swap(numbers[j], numbers[j + 1]);
 				numberOfAssignments += 3;
+				std::swap(numbers[j], numbers[j + 1]);
 			}
 		}
 	}
 
-	std::cout << "\nsorted by bubble method:\n";
+	// print the copied vector
+	std::cout << "\nsorted:\n";
 	printVector(numbers);
 	std::cout << "number of comparisons: " << numberOfComparisons << '\n';
 	std::cout << "number of assignments: " << numberOfAssignments << '\n';
 }
 
+//сортировка выбором 
 void selectionSort(std::vector<int> numbers)
 {
 	int numberOfComparisons{ 0 };
@@ -52,7 +54,6 @@ void selectionSort(std::vector<int> numbers)
 				indexOfMinimum = j;
 		}
 
-		++numberOfComparisons;
 		if (numbers[indexOfMinimum] != numbers[i])
 		{
 			numberOfAssignments += 3;
@@ -66,6 +67,7 @@ void selectionSort(std::vector<int> numbers)
 	std::cout << "number of assignments: " << numberOfAssignments << '\n';
 }
 
+//метод вставки
 void insertionSort(std::vector<int> numbers)
 {
 	int numberOfComparisons{ 0 };

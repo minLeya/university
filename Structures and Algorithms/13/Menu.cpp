@@ -86,8 +86,6 @@ void menu(std::vector<int>& numbers, int command)
 	case 4:
 		makeVector(numbers);
 		break;
-	case 5:
-		cycle = false;
 	}
 }
 
