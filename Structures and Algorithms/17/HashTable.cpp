@@ -1,6 +1,7 @@
 #include "HashTable.h"
 #include <iostream>
 
+
 void hashFunction(int& index)
 {
 	index %= constants::tableSize;
@@ -28,35 +29,37 @@ bool isValueCorrect(const std::string& value)
 	return false;
 }
 
-void addToTable(HashTable& table, const std::string& newValue)
+std::optional<int> addToTable(HashTable& table, const std::string& newValue)
 {
 	if (!isValueCorrect(newValue))
 	{
-		std::cout << "\nthere's no such key\n";
-		return;
+		std::cout << "\nthere's no such key\n\n";
+		return std::nullopt;
 	}
 
 	if (table.size == constants::tableSize)
 	{
-		std::cout << "\nthe table is full\n";
-		return;
+		std::cout << "\nthe table is full\n\n";
+		return std::nullopt;
 	}
 
 	int numberOfComparisons{ 0 };
 	int index{ getIndex(newValue) }; //индекс введенного элемента
 	int currentIndex{ index }; 
 	int i{ 1 };
+	++numberOfComparisons;
 	while (table.array[currentIndex] != "-" && i <= constants::tableSize - 2) //rule in the task
 	{
 		++numberOfComparisons;
-		currentIndex = ((index + i) % i) ;
+		currentIndex = ((index + i) % i);
 		++i;
 	}
 
 	table.array[currentIndex] = newValue;
 	++table.size;
+	std::cout << "\nsize is: " << table.size << '\n';
 
-	std::cout << "\nnumber of comparisons: " << numberOfComparisons << '\n';
+	return numberOfComparisons;
 }
 
 bool findInTable(const HashTable& table, const std::string& value)
@@ -69,14 +72,14 @@ bool findInTable(const HashTable& table, const std::string& value)
 		++numberOfComparisons;
 		if (table.array[valueIndex] == value)
 		{
-			std::cout << "\nnumber of comparisons: " << numberOfComparisons << 'n';
+			std::cout << "\nnumber of comparisons: " << numberOfComparisons << "\n\n";
 			return true;
 		}
-		++valueIndex;
-		valueIndex %= constants::tableSize; //чтобы не выходило за пределы хеш-таблицы
+		
+		++valueIndex %= constants::tableSize; //чтобы не выходило за пределы хеш-таблицы
 		++i;
 	}
-	std::cout << "\nnumber of comparisons: " << numberOfComparisons << '\n';
+	std::cout << "\nnumber of comparisons: " << numberOfComparisons << "\n\n";
 	return false;
 }
 
@@ -91,8 +94,14 @@ void showTable(const HashTable& table)
 
 void fillTable(HashTable& table)
 {
-	for (auto& key : Keys::keys)
+	int numberOfComaprisons{ 0 };
+	for (const auto& key : Keys::keys)
 	{
-		addToTable(table, key);
+		auto add{ addToTable(table, key) };
+		if (add)
+			numberOfComaprisons += add.value();
 	}
+
+	std::cout << "\nnumber of comparisons: "<< numberOfComaprisons << '\n';
+	std::cout << "\nsize is: " << table.size << '\n';
 }

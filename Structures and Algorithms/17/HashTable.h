@@ -3,6 +3,7 @@
 
 #include <array>
 #include <string>
+#include <optional>
 
 
 namespace constants
@@ -31,13 +32,13 @@ namespace Keys
 struct HashTable
 {
 	std::string array[constants::tableSize]{};
-	int size{};
+	int size{ 0 };
 };
 
-void addToTable(HashTable& table, const std::string& newValue);
 bool findInTable(const HashTable& table, const std::string& value);
 void showTable(const HashTable& table);
 void fillTable(HashTable& table);
+std::optional<int> addToTable(HashTable& table, const std::string& newValue);
 
 
 #endif // !HASHTABLE_H

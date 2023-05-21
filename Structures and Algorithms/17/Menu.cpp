@@ -24,8 +24,11 @@ void menuAdd(HashTable& table)
 {
 	std::cout << "\nenter the key to add: ";
 	std::string newValue{ getString() };
-	addToTable(table, newValue);
-	std::cout << '\n';
+	auto add{ addToTable(table, newValue) };
+	if (add)
+	{
+		std::cout << "\nthe number of comparisons: " << add.value() << "\n\n";
+	}
 }
 
 void menuSearch(HashTable& table)
@@ -34,11 +37,11 @@ void menuSearch(HashTable& table)
 	std::string valueToFind{ getString() };
 	if (findInTable(table, valueToFind))
 	{
-		std::cout << "\nthe key " << valueToFind << " is found\n";
+		std::cout << "\nthe key " << valueToFind << " is found\n\n";
 	}
 	else
 	{
-		std::cout << "\nthe key " << valueToFind << " is not in the table\n";
+		std::cout << "\nthe key " << valueToFind << " is not in the table\n\n";
 	}
 }
 
