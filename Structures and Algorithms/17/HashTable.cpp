@@ -51,14 +51,13 @@ std::optional<int> addToTable(HashTable& table, const std::string& newValue)
 	while (table.array[currentIndex] != "-" && i <= constants::tableSize - 2) //rule in the task
 	{
 		++numberOfComparisons;
-		currentIndex = ((index + i) % i);
+		currentIndex = ((index + i) % constants::tableSize);
 		++i;
 	}
 
 	table.array[currentIndex] = newValue;
 	++table.size;
-	std::cout << "\nsize is: " << table.size << '\n';
-
+	
 	return numberOfComparisons;
 }
 
@@ -94,14 +93,15 @@ void showTable(const HashTable& table)
 
 void fillTable(HashTable& table)
 {
-	int numberOfComaprisons{ 0 };
+	int numberOfComparisons{ 0 };
 	for (const auto& key : Keys::keys)
 	{
 		auto add{ addToTable(table, key) };
 		if (add)
-			numberOfComaprisons += add.value();
+		{
+			numberOfComparisons += add.value();
+		}
 	}
 
-	std::cout << "\nnumber of comparisons: "<< numberOfComaprisons << '\n';
-	std::cout << "\nsize is: " << table.size << '\n';
+	std::cout << "\nnumber of comparisons: " << numberOfComparisons << '\n';
 }

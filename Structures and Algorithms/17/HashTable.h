@@ -15,7 +15,7 @@ namespace constants
 
 namespace Keys
 {
-	inline std::array <std::string, constants::tableSize> keys
+	inline std::array <std::string, constants::keySize> keys
 	{   "int",
 		"inline",
 		"bool",
@@ -25,7 +25,7 @@ namespace Keys
 		"else",
 		"private",
 		"struct",
-		"case",
+		"case"
 	};
 }
 
@@ -35,10 +35,11 @@ struct HashTable
 	int size{ 0 };
 };
 
+std::optional<int> addToTable(HashTable& table, const std::string& newValue);
+
 bool findInTable(const HashTable& table, const std::string& value);
 void showTable(const HashTable& table);
 void fillTable(HashTable& table);
-std::optional<int> addToTable(HashTable& table, const std::string& newValue);
 
 
 #endif // !HASHTABLE_H
