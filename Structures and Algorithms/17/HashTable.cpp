@@ -1,57 +1,42 @@
 #include "HashTable.h"
 #include <iostream>
 
+//внутреннее хеширование
 
-void hashFunction(int& index)
-{
-	index %= constants::tableSize;
-}
-
-int getIndex(const std::string& value)
+int hashFunction(const std::string& value)
 {
 	int index{};
 	for (auto& character : value)
 	{
 		index += static_cast<int>(character);
 	}
-	hashFunction(index);
-
+	index %= constants::tableSize;
 	return index;
-}
-
-bool isValueCorrect(const std::string& value)
-{
-	for (auto& key : Keys::keys)
-	{
-		if (key == value)
-			return true;
-	}
-	return false;
 }
 
 std::optional<int> addToTable(HashTable& table, const std::string& newValue)
 {
-	if (!isValueCorrect(newValue))
-	{
-		std::cout << "\nthere's no such key\n\n";
-		return std::nullopt;
-	}
-
 	if (table.size == constants::tableSize)
 	{
-		std::cout << "\nthe table is full\n\n";
+		std::cout << "\nthe table is full\n";
 		return std::nullopt;
 	}
 
 	int numberOfComparisons{ 0 };
-	int index{ getIndex(newValue) }; //индекс введенного элемента
+	bool isInTable{ findInTable(table, newValue).first };
+	if (isInTable)
+	{
+		std::cout << "\nthe value was found in the table\n\n";
+		return std::nullopt;
+	}
+	int index{ hashFunction(newValue) };
 	int currentIndex{ index }; 
 	int i{ 1 };
 	++numberOfComparisons;
-	while (table.array[currentIndex] != "-" && i <= constants::tableSize - 2) //rule in the task
+	while (!table.array[currentIndex].empty())
 	{
 		++numberOfComparisons;
-		currentIndex = ((index + i) % constants::tableSize);
+		currentIndex = (index + i) % constants::tableSize;
 		++i;
 	}
 
@@ -61,34 +46,33 @@ std::optional<int> addToTable(HashTable& table, const std::string& newValue)
 	return numberOfComparisons;
 }
 
-bool findInTable(const HashTable& table, const std::string& value)
+std::pair<bool, int> findInTable(const HashTable& table, const std::string& value)
 {
-	int valueIndex{ getIndex(value) }; //индекс введенного ключа 
+	int valueIndex{ hashFunction(value) };
 	int numberOfComparisons{ 0 };
 	int i{ 0 };
+	if (table.array[valueIndex].empty())
+	{
+		return { false, numberOfComparisons };
+	}
 	while (i <= constants::tableSize - 1)
 	{
 		++numberOfComparisons;
 		if (table.array[valueIndex] == value)
 		{
-			std::cout << "\nnumber of comparisons: " << numberOfComparisons << "\n\n";
-			return true;
+			return { true, numberOfComparisons };
 		}
-		
-		++valueIndex %= constants::tableSize; //чтобы не выходило за пределы хеш-таблицы
+		++valueIndex;
+		valueIndex %= constants::tableSize; 
 		++i;
 	}
-	std::cout << "\nnumber of comparisons: " << numberOfComparisons << "\n\n";
-	return false;
+	return { false, numberOfComparisons };
 }
 
 void showTable(const HashTable& table)
 {
-	for (auto& element : table.array)
-	{
-		std::cout << element << ' ';
-	}
-	std::cout << '\n';
+	for (int i{ 0 }; i < constants::tableSize; ++i)
+		std::cout << i << ". " << table.array[i] << '\n';
 }
 
 void fillTable(HashTable& table)
@@ -103,5 +87,5 @@ void fillTable(HashTable& table)
 		}
 	}
 
-	std::cout << "\nnumber of comparisons: " << numberOfComparisons << '\n';
+	std::cout << "\nnumber of comparisons: " << numberOfComparisons << "\n\n";
 }

@@ -37,7 +37,7 @@ struct HashTable
 
 std::optional<int> addToTable(HashTable& table, const std::string& newValue);
 
-bool findInTable(const HashTable& table, const std::string& value);
+std::pair<bool, int> findInTable(const HashTable& table, const std::string& value);
 void showTable(const HashTable& table);
 void fillTable(HashTable& table);
 

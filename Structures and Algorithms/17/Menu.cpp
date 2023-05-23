@@ -35,7 +35,9 @@ void menuSearch(HashTable& table)
 {
 	std::cout << "\nenter the key to find: ";
 	std::string valueToFind{ getString() };
-	if (findInTable(table, valueToFind))
+	bool isInTable{ findInTable(table, valueToFind).first };
+	int numberOfComparisons{ findInTable(table, valueToFind).second };
+	if (isInTable)
 	{
 		std::cout << "\nthe key " << valueToFind << " is found\n\n";
 	}
@@ -43,6 +45,8 @@ void menuSearch(HashTable& table)
 	{
 		std::cout << "\nthe key " << valueToFind << " is not in the table\n\n";
 	}
+	std::cout << "number of comparisons: " << numberOfComparisons << '\n';
+
 }
 
 void menuPrint(HashTable& table)
@@ -81,8 +85,6 @@ int getNumber()
 void run()
 {
 	HashTable table{};
-	for (int i{ 0 }; i < constants::tableSize; ++i)
-		table.array[i] = "-";
 
 	int choice{};
 	while (choice != -1)
