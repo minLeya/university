@@ -48,13 +48,13 @@ void menuRemove(HashTable& table)
 	std::cout << "\nenter the key to remove: ";
 	std::string valueToRemove{ getString() };
 	removeFromTable(table, valueToRemove);
+	std::cout << '\n';
 }
 
 void menuPrint(HashTable& table)
 {
 	std::cout << "\nthe table looks like that:\n";
 	showTable(table);
-	std::cout << '\n';
 }
 
 void menu(HashTable& table, int choice)
@@ -89,9 +89,7 @@ int getNumber()
 void run()
 {
 	HashTable table{};
-	for (int i{ 0 }; i < constants::size; ++i)
-		table.array[i] = "-";
-
+	
 	int choice{};
 	while (choice != -1)
 	{

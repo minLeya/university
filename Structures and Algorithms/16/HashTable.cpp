@@ -1,26 +1,19 @@
 #include "HashTable.h"
-
+//бесконфликтная хеш-таблица
 #include <iostream>
 
-
-void hashFunction(int& index)
-{
-	index %= 10;
-}
-
-int getIndex(const std::string& value)
+int hashFunction(const std::string& value)
 {
 	int index{};
 	for (auto& character : value)
 	{
 		index += static_cast<int>(character);
 	}
-	hashFunction(index);
+	index %= 10;
 
 	return index;
 }
 
-//проверка
 bool isValueCorrect(const std::string& value)
 {
 	for (auto& key : Keys::keys)
@@ -44,13 +37,13 @@ void addToTable(HashTable& table,const std::string& newValue)
 		std::cout <<'\n' << newValue << " is already in the table\n";
 		return;
 	}
-	int index{ getIndex(newValue) };
+	int index{ hashFunction(newValue) };
 	table.array[index] = newValue;
 }
 
 bool findInTable(const HashTable& table, const std::string& value)
 {
-	int valueIndex{ getIndex(value) };
+	int valueIndex{ hashFunction(value) };
 	if (table.array[valueIndex] == value)
 	{
 		return true;
@@ -60,16 +53,16 @@ bool findInTable(const HashTable& table, const std::string& value)
 
 void showTable(const HashTable& table)
 {
-	for (auto& element : table.array)
+	for (int i{0}; i<constants::size; ++i)
 	{
-		std::cout << element << ' ';
+		std::cout << i << ". " << table.array[i] << '\n';
 	}
 	std::cout << '\n';
 }
 
 void fillTable(HashTable& table)
 {
-	for (auto& key : Keys::keys)
+	for (const auto& key : Keys::keys)
 	{
 		addToTable(table, key);
 	}
@@ -88,6 +81,6 @@ void removeFromTable(HashTable& table, const std::string& valueToRemove)
 		std::cout << "\nthere's no such element in the table\n\n";
 		return;
 	}
-	int index{ getIndex(valueToRemove) };
-	table.array[index] = "-";
+	int index{ hashFunction(valueToRemove) };
+	table.array[index].clear();
 }

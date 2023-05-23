@@ -22,7 +22,7 @@ namespace Keys
 		"else",
 		"private",
 		"struct",
-		"case",
+		"case"
 	};
 }
 
