@@ -13,10 +13,10 @@ void printVector(const std::vector<int>& numbers)
 	std::cout << '\n';
 }
 
-//���������� ��������� ����������
+//простейшая карманная сортировка
 void bucketSort(std::vector<int> numbers, int option)
 {
-	if (option == 0) //�� ������ ��������
+	if (option == 1) //со вторым массивом
 	{
 		std::vector<int> sorted(numbers.size());
 		for (std::size_t i{ 0 }; i < numbers.size(); ++i)
@@ -25,7 +25,7 @@ void bucketSort(std::vector<int> numbers, int option)
 		std::cout << "\nsorted:\n";
 		printVector(sorted);
 	}
-	else if (option == 1) //��� ������� �������
+	else if (option == 2) //без второго массива
 	{
 		for (std::size_t i{ 0 }; i < numbers.size(); ++i)
 		{
@@ -39,21 +39,22 @@ void bucketSort(std::vector<int> numbers, int option)
 		std::cout << "\nincorrect option\n";
 }
 
-//���������� ��������� ���������� � �������������� ������� � ��������������� ��������
+//обобщенная карманная сортировка с повторяющимися ключами и дополнительными списками
 struct Node
 {
 	int data{};
 	Node* next{ nullptr };
 };
 
+//сортировка вставками для связных списков
 Node* insertionListSort(Node* newNode, Node* sorted)
 {
-	if (sorted == nullptr || sorted->data >= newNode->data)
+	if (sorted == nullptr || sorted->data >= newNode->data) 
 	{
 		newNode->next = sorted;
 		return newNode;
 	}
-	else
+	else 
 	{
 		Node* current{ sorted };
 
@@ -63,10 +64,10 @@ Node* insertionListSort(Node* newNode, Node* sorted)
 		newNode->next = current->next;
 		current->next = newNode;
 	}
-
-	return sorted;
+	return sorted; //возвращает отсортированную часть списка
 }
 
+//сортировка 1 кармана
 Node* sortBucket(Node* head)
 {
 	Node* current{ head };
@@ -82,6 +83,7 @@ Node* sortBucket(Node* head)
 	return sorted;
 }
 
+//главная функция для обобщенной карманной сортировки
 void genericBucketSort(std::vector<int> numbers)
 {
 	int numberOfBuckets{};
@@ -91,21 +93,21 @@ void genericBucketSort(std::vector<int> numbers)
 		numberOfBuckets = 10;
 
 	int bucketInterval{ static_cast<int>(numbers.size() / numberOfBuckets) + 1 };
-	std::vector<Node*> buckets(numberOfBuckets);
+	std::vector<Node*> buckets(numberOfBuckets); //массив из карманов
 
-	for (std::size_t i{ 0 }; i < numbers.size(); ++i)
+	for (std::size_t i{ 0 }; i < numbers.size(); ++i) //просматриваем основной массив и заполняем каждый карман
 	{
-		int position{ numbers[i] / bucketInterval };
+		int position{ numbers[i] / bucketInterval }; //индекс кармана
 		Node* current{ new Node{} };
 		current->data = numbers[i];
 		current->next = buckets[position];
-		buckets[position] = current;
+		buckets[position] = current; 
 	}
 
 	for (int i{ 0 }; i < numberOfBuckets; ++i)
-		buckets[i] = sortBucket(buckets[i]);
+		buckets[i] = sortBucket(buckets[i]); //сортировка каждого кармана
 
-	for (int j{ 0 }, i{ 0 }; i < numberOfBuckets; ++i)
+	for (int j{ 0 }, i{ 0 }; i < numberOfBuckets; ++i) //собирает числа из карманов
 	{
 		Node* node{ buckets[i] };
 		while (node)
@@ -119,10 +121,10 @@ void genericBucketSort(std::vector<int> numbers)
 	printVector(numbers);
 }
 
-//����������� ����������
+//поразрядная сортировка
 void countingSortForRadix(std::vector<int>& numbers, int size, int digit)
 {
-	std::vector<int> workingStorage(10); //������ ��� ��������
+	std::vector<int> workingStorage(10); //массив для разрядов
 	std::vector<int> result(numbers.size());
 
 	for (int i{ 0 }; i < size; ++i)
@@ -140,6 +142,7 @@ void countingSortForRadix(std::vector<int>& numbers, int size, int digit)
 	numbers = result;
 }
 
+//повторение карманной сортировки k раз, где k - это разряд числа
 void radixSort(std::vector<int> numbers)
 {
 	int size{ static_cast<int>(numbers.size()) };
