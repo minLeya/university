@@ -1,1 +1,1 @@
-assignments from university programming courses of 4th term
+assignments from university programming courses 
