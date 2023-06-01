@@ -11,6 +11,8 @@ class Provider
 private:
 	std::string m_name{};
 
+	Provider* m_next{}; //?
+
 	Product* m_productHead{};
 
 public:
@@ -19,16 +21,23 @@ public:
 
 	void setName(std::string& name);
 	void setProductHead(Product* producthead);
+	void setNext(Provider* next);
 
 	int getValue();
 	std::string getString();
 
 	std::string getName();
 	Product* getProductHead();
+	Provider* getProviderNext();
 
-	bool isProductEmpty(Product* productHead);
-	void addProduct(Product* productHead);
+	bool isProviderEmpty();
+	void addProduct(std::string& newName, int newQuantity);
+	bool findProduct(std::string& productName);
+	void removeProduct(std::string& productName);
+	void printProducts();
 
+	 //destructor
+	//~Provider();
 };
 
 #endif

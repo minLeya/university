@@ -2,13 +2,13 @@
 #include <iostream>
 
 Firm::Firm() : m_name{ "Firm" }, m_stack{},
-			   m_top{ -1 }, m_count{ 0 } //top{0}
+m_count{ 0 }, m_top{ -1 } //m_stackPointer{ 0 } //top{0}
 {
 
 }
 
 Firm::Firm(std::string& name) : m_name{ name }, m_stack{},
-								m_top{ -1 }, m_count{ 0 }//top{0}
+m_count{ 0 }, m_top{ -1 } //m_stackPointer{ 0 }//top{0}
 {
 
 }
@@ -23,10 +23,15 @@ void Firm::setTop(int newTop)
 	m_top = newTop;
 }
 
-void Firm::setCount(int newTop)
+void Firm::setCount(int newCount)
 {
-	m_top = newTop;
+	m_count = newCount;
 }
+
+//void Firm::setProviderHead(Provider* newHead)
+//{
+//	m_providerHead = newHead;
+//}
 
 std::string Firm::getName()
 {
@@ -43,14 +48,24 @@ int Firm::getCount()
 	return m_count;
 }
 
+//Provider* Firm::getProviderHead()
+//{
+//	return m_providerHead;
+//}
+
+Provider Firm::getProvider(int index)
+{
+	return m_stack[index];
+}
+
 bool Firm::isProviderEmpty()
 {
-	return (m_count == 0);
+	return m_count == 0;
 }
 
 bool Firm::isProviderFull()
 {
-	return (m_count >= constants::size);
+	return m_count >= constants::size;
 }
 
 std::string Firm::getString()
@@ -60,7 +75,7 @@ std::string Firm::getString()
 	return string;
 }
 
-void Firm::addProvider()
+void Firm::addProvider() //add to the end
 {
 	if (isProviderFull())
 	{
@@ -68,37 +83,85 @@ void Firm::addProvider()
 	}
 	else
 	{
+		std::cout << "enter the name of provider: ";
 		Provider newProvider{};
 		std::string newName{ getString() };
 		newProvider.setName(newName);
+		m_stack[m_top + 1] = newProvider;
 		setTop(getTop() + 1);
-		setCount(getCount() + 1);	
-		m_stack[m_top] = newProvider;
+		setCount(getCount() + 1);
 	}
 }
 
-void Firm::deleteProvider()
+void Firm::removeProvider()
 {
 	if (isProviderEmpty())
 	{
 		std::cout << "stack is empty\n";
+		return;
 	}
-	else
+	std::cout << "\nenter the name of provider to delete: ";
+	std::string providerName{ getString() };
+	int index{ findProvider(providerName) };
+	int auxiliaryTop{ 0 };
+	Provider auxiliaryStack[5]{};
+	if (index == -1)
+	{
+		std::cout << "\nthere's no such provider\n";
+		return;
+	}
+	else if (index == getTop()) 
 	{
 		setTop(getTop() - 1);
 		setCount(getCount() - 1);
 	}
+	else
+	{
+		
+		for (int i{ getTop() }; i > index; --i)
+		{
+			auxiliaryStack[auxiliaryTop] = m_stack[i];
+			++auxiliaryTop;
+		}
+		setTop(getTop() - 1);
+		setCount(getCount() - 1);
+		/*while (index < getTop())
+		{
+			m_stack[index] = auxiliaryStack[auxiliaryTop];
+			--auxiliaryTop;
+			++index;
+		}*/
+
+		/*for (int t{ index }; t < getTop(); ++t)
+		{
+			m_stack[t] = auxiliaryStack[auxiliaryTop];
+			--auxiliaryTop;
+		}*/
+		
+	}
 }
 
-void Firm::showProviders()
+void Firm::printProviders()
 {
 	if (isProviderEmpty())
 	{
-		std::cout << "empty, there's no provider\n";
+		std::cout << "\nempty, there's no provider\n";
 		return;
 	}
-	for (int i{ 0 }; i <= m_count - 1; ++i)
+	for (int i{ 0 }; i <= m_top; ++i)
 	{
 		std::cout << "provider: " << m_stack[i].getName() << '\n';
 	}
 }
+
+int Firm::findProvider(std::string& providerName)
+{
+	for (int i{ 0 }; i <= m_top; ++i)
+	{
+		if (m_stack[i].getName() == providerName)
+			return i;
+	}
+	return -1;
+}
+
+//destructor!!
