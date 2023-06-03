@@ -18,7 +18,6 @@ private:
 	Provider m_stack[constants::size]{};
 	int m_top{}; //указатель на число-топ
 	int m_count{}; //количество элементов
-	//int m_stackPointer{}; //указатель на первую свободную €чейку
 	//Provider* m_providerHead{};
 public:
 	Firm();
@@ -33,18 +32,20 @@ public:
 	int getTop();
 	int getCount();
 	//Provider* getProviderHead();
-	Provider getProvider(int index);
+	const Provider& getProvider(int index) const;
+	Provider& getProvider(int index);
 
 	std::string getString();
 
 	bool isProviderEmpty();
 	bool isProviderFull();
 
-	void addProvider();
+	void addProvider(std::string& name);
 	void removeProvider();
 	int findProvider(std::string& providerName);
 	void printProviders();
 
+	void addProduct(std::string& providerName, std::string& productName, int productQuantity);
 };
 
 #endif // !FIRM_H

@@ -11,21 +11,9 @@
 
 int main()
 {
-	///*std::string newN{ "xid" };*/
-	//Firm firm{};
-	//Provider provider{};
-	//firm.addProvider();
-	//firm.addProvider();
-	//firm.addProvider();
-	//firm.showProviders();
-	////firm.deleteProvider();
-	////provider.addProduct(firm.get);
-	//firm.showProviders();
-
-	///*firm.deleteProvider();
-	//firm.showProviders();*/
-
 	run();
+	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
+	_CrtDumpMemoryLeaks();
 	return 0;
 }
 

@@ -23,24 +23,14 @@ void Provider::setProductHead(Product* producthead)
 	m_productHead = producthead;
 }
 
-void Provider::setNext(Provider* next)
-{
-	m_next = next;
-}
-
 std::string Provider::getName()
 {
 	return m_name;
 }
 
-Product* Provider:: getProductHead()
+Product* Provider:: getProductHead() const
 {
 	return m_productHead;
-}
-
-Provider* Provider::getProviderNext()
-{
-	return m_next;
 }
 
 int Provider::getValue()
@@ -59,12 +49,11 @@ std::string Provider::getString()
 
 bool Provider::isProviderEmpty()
 {
-	return(m_productHead->getNext() == m_productHead); //закольцованный с заголовком
+	return(m_productHead == nullptr);
 }
 
-void Provider::addProduct(std::string& newName, int newQuantity)
+void Provider::addProduct()
 {
-	Product* productHead{};
 	if (isProviderEmpty())
 	{
 		std::cout << "\nEnter new product's name: ";
@@ -72,15 +61,12 @@ void Provider::addProduct(std::string& newName, int newQuantity)
 		std::cout << "\nEnter new product's quantity: ";
 		int newQuantity{ getValue() };
 		
-		Product* newProduct{ new Product{} };
-		newProduct->setQuantity(newQuantity);
-		newProduct->setName(newName);
+		Product* newProduct{ new Product{newName, newQuantity} };
 
-		productHead->setNext(newProduct);
-		productHead->setPrev(newProduct);
+		m_productHead = newProduct;
 		
-		newProduct->setNext(productHead);
-		newProduct->setPrev(productHead);
+		newProduct->setNext(nullptr);
+		newProduct->setPrev(nullptr);
 	}
 	else
 	{
@@ -92,15 +78,15 @@ void Provider::addProduct(std::string& newName, int newQuantity)
 			std::cout << "\nEnter the name of product before which you'd like to add new element: ";
 			std::string currentItem{ getString() };
 
-			Product* current{ productHead->getNext()};
-			while (current != productHead && current->getName() != currentItem)
+			Product* current{ m_productHead };
+			while (current != nullptr && current->getName() != currentItem)
 			{
 				current = current->getNext();
 			}
 
-			if (current == productHead)
+			if (current == nullptr)
 			{
-				std::cerr << "\There's no such product in the list!\n";
+				std::cerr << "There's no such product in the list!\n";
 				return;
 			}
 
@@ -109,32 +95,41 @@ void Provider::addProduct(std::string& newName, int newQuantity)
 			std::cout << "\nEnter new product's quantity: ";
 			int newQuantity{ getValue() };
 
-			Product* newProduct{ new Product{} };
-
-			newProduct->setName(newName);
-			newProduct->setQuantity(newQuantity);
-			
+			Product* newProduct{ new Product{newName, newQuantity} };
+			// todo: fix this
+			//doen't work if i try to add new element before the first element
+			//upd it works but i've to test it more
 			newProduct->setNext(current);
-			Product* temp{ current->getPrev() };
-			newProduct->setPrev(temp);
-			newProduct->getPrev()->setNext(newProduct);
-			newProduct->setPrev(newProduct);
-
+			
+			if (current == m_productHead)
+			{
+				m_productHead = newProduct;
+				//newProduct->setPrev(nullptr);
+			}
+			else
+			{
+				Product* temp{ current->getPrev() };
+				newProduct->setPrev(temp);
+				if (temp)
+					temp->setNext(newProduct);
+			}
+			
+			current->setPrev(newProduct);
 		}
 		else if (choice == 2)//after
 		{
 			std::cout << "\nEnter the name of product after which you'd like to add new element: ";
 			std::string currentItem{ getString() };
 
-			Product* current{ productHead->getNext()};
-			while (current != productHead && current->getName() != currentItem)
+			Product* current{ m_productHead };
+			while (current != nullptr && current->getName() != currentItem)
 			{
 				current = current->getNext();
 			}
 
-			if (current == productHead)
+			if (current == nullptr)
 			{
-				std::cerr << "\There's no such product in the list!\n";
+				std::cerr << "There's no such product in the list!\n";
 				return;
 			}
 
@@ -143,15 +138,13 @@ void Provider::addProduct(std::string& newName, int newQuantity)
 			std::cout << "\nEnter new product's quantity: ";
 			int newQuantity{ getValue() };
 
-			Product* newProduct{ new Product{} };
-
-			newProduct->setName(newName);
-			newProduct->setQuantity(newQuantity);
+			Product* newProduct{ new Product{newName, newQuantity} };
 
 			Product* temp{ current->getNext() };
 			newProduct->setNext(temp);
 			newProduct->setPrev(current);
-			current->getNext()->setPrev(newProduct);
+			if (temp)
+				temp->setPrev(newProduct);
 			current->setNext(newProduct);
 		}
 		else
@@ -161,57 +154,45 @@ void Provider::addProduct(std::string& newName, int newQuantity)
 	}
 }
 
-bool Provider::findProduct(std::string& productName) //check if the list is empty?
+bool Provider::findProduct(std::string& productName) 
 {
 	Product* current{ m_productHead };
-	while (current != m_productHead && current->getName() != productName)
+	while (current != nullptr && current->getName() != productName)
 	{
 		current = current->getNext();
 	}
 	
-	if (current == m_productHead)
+	if (current == nullptr)
 		return false;
 
-	std::cout << "\nproduct " << productName << " was found\n"; //should i add in which provider??
 	return true;
 }
 
-//it looks more correct to me
-//void Provider::removeProduct()
-//{
-//	std::cout << "\nEnter the name of the product you'd like to delete: ";
-//	std::string productName{ getString()};
-//	
-//	if (!findProduct(productName))
-//	{
-//		std::cout << "\ncouldn't find this product\n";
-//		return;
-//	}
-//
-//}
 
-void Provider::removeProduct(std::string& productName)
+void Provider::removeProduct(std::string& providerName, std::string& productName)
 {
-	if (isProviderEmpty())//should it be there?
-		//'cause it'll be like: enter the name of product to delete,
-		// but then oh wait the list is empty, you cannot delete
+	if (isProviderEmpty())
 	{
-		std::cout << "\nthee provider list is empty\n";
-		return;
+		std::cout << "provider " << providerName << " is empty\n";
 	}
 	if (!findProduct(productName))
 	{
 		std::cout << "\ncouldn't find this product\n";
 		return;
 	}
-	Product* current{ m_productHead->getNext() };
-	while (current != m_productHead && current->getName() != productName)
+	
+	Product* current{ m_productHead };
+	while (current->getName() != productName)
 		current = current->getNext();
 
-	Product* currNext{ current->getNext() };
-	current->getPrev()->setNext(currNext);
-	Product* currPrev{ current->getPrev() };
-	current->getNext()->setPrev(currPrev);
+	if (current == m_productHead)
+		m_productHead = current->getNext();
+
+	if (current->getPrev() != nullptr)
+		current->getPrev()->setNext(current->getNext());
+	if (current->getNext() != nullptr)
+		current->getNext()->setPrev(current->getPrev());
+
 	delete current;
 }
 
@@ -219,18 +200,50 @@ void Provider::printProducts()
 {
 	if (isProviderEmpty())
 	{
-		std::cout << "\nthere's no products\n";
+		std::cout << "there's no products\n";
 		return;
 	}
 	Product* current{ m_productHead };
-	while (current != m_productHead)
+	while (current != nullptr)
 	{
-		std::cout << "product: " << current->getName() << " (" << current->getQuantity() << ")\n";
+		std::cout  << current->getName() << " (" << current->getQuantity() << ")";
 		current = current->getNext();
+		if (current != nullptr)
+			std::cout << ", ";
+		else
+			std::cout << '\n';
 	}
 }
 
-//Provider::~Provider()
-//{
-//	//??
-//}
+void Provider::addProduct(std::string& productName, int productQuantity) // функция добаваления продукта при считывании с файла
+{																		// добавляет последовательно. так, как в самом файле
+	Product* newProduct{ new Product{productName, productQuantity} };
+
+	if (isProviderEmpty())
+	{
+		m_productHead = newProduct;
+
+		newProduct->setNext(nullptr);
+		newProduct->setPrev(nullptr);
+	}
+	else
+	{
+		Product* current{ m_productHead };
+		while (current->getNext() != nullptr)
+		{
+			current = current->getNext();
+		}
+
+		Product* temp{ current->getNext() };
+		newProduct->setNext(temp);
+		newProduct->setPrev(current);
+		if (temp)
+			temp->setPrev(newProduct);
+		current->setNext(newProduct);
+	}
+}
+
+Provider::~Provider()
+{
+
+}

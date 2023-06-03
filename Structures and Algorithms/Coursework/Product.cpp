@@ -22,12 +22,12 @@ void Product::setQuantity(int quantity)
 	m_quantity = quantity;
 }
 
-void Product::setNext(Product*& next)
+void Product::setNext(Product* const next)
 {
 	m_next = next;
 }
 
-void Product::setPrev(Product*& prev)
+void Product::setPrev(Product* const prev)
 {
 	m_prev = prev;
 }

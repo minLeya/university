@@ -1,7 +1,7 @@
 #include "Firm.h"
 #include <iostream>
 
-Firm::Firm() : m_name{ "Firm" }, m_stack{},
+Firm::Firm() : m_name{ "Default Firm" }, m_stack{},
 m_count{ 0 }, m_top{ -1 } //m_stackPointer{ 0 } //top{0}
 {
 
@@ -28,11 +28,6 @@ void Firm::setCount(int newCount)
 	m_count = newCount;
 }
 
-//void Firm::setProviderHead(Provider* newHead)
-//{
-//	m_providerHead = newHead;
-//}
-
 std::string Firm::getName()
 {
 	return m_name;
@@ -48,12 +43,12 @@ int Firm::getCount()
 	return m_count;
 }
 
-//Provider* Firm::getProviderHead()
-//{
-//	return m_providerHead;
-//}
+const Provider& Firm::getProvider(int index) const
+{
+	return m_stack[index];
+}
 
-Provider Firm::getProvider(int index)
+Provider& Firm::getProvider(int index)
 {
 	return m_stack[index];
 }
@@ -75,7 +70,7 @@ std::string Firm::getString()
 	return string;
 }
 
-void Firm::addProvider() //add to the end
+void Firm::addProvider(std::string& name) //add to the end
 {
 	if (isProviderFull())
 	{
@@ -83,13 +78,11 @@ void Firm::addProvider() //add to the end
 	}
 	else
 	{
-		std::cout << "enter the name of provider: ";
 		Provider newProvider{};
-		std::string newName{ getString() };
-		newProvider.setName(newName);
+		newProvider.setName(name);
 		m_stack[m_top + 1] = newProvider;
-		setTop(getTop() + 1);
-		setCount(getCount() + 1);
+		++m_top;
+		++m_count;
 	}
 }
 
@@ -103,41 +96,39 @@ void Firm::removeProvider()
 	std::cout << "\nenter the name of provider to delete: ";
 	std::string providerName{ getString() };
 	int index{ findProvider(providerName) };
-	int auxiliaryTop{ 0 };
-	Provider auxiliaryStack[5]{};
 	if (index == -1)
 	{
 		std::cout << "\nthere's no such provider\n";
 		return;
 	}
-	else if (index == getTop()) 
+	
+	if (index == m_top) 
 	{
-		setTop(getTop() - 1);
-		setCount(getCount() - 1);
+		--m_top;
+		--m_count;
 	}
 	else
-	{
-		
-		for (int i{ getTop() }; i > index; --i)
+	{	
+		int auxiliaryTop{ -1 };
+		Provider auxiliaryStack[constants::size]{};
+		while (m_top >= 0)
 		{
-			auxiliaryStack[auxiliaryTop] = m_stack[i];
-			++auxiliaryTop;
+			if (m_top != index)
+			{
+				++auxiliaryTop;
+				auxiliaryStack[auxiliaryTop] = m_stack[m_top];
+			}
+			--m_top;
 		}
-		setTop(getTop() - 1);
-		setCount(getCount() - 1);
-		/*while (index < getTop())
-		{
-			m_stack[index] = auxiliaryStack[auxiliaryTop];
-			--auxiliaryTop;
-			++index;
-		}*/
 
-		/*for (int t{ index }; t < getTop(); ++t)
+		while (auxiliaryTop >= 0)
 		{
-			m_stack[t] = auxiliaryStack[auxiliaryTop];
+			++m_top;
+			m_stack[m_top] = auxiliaryStack[auxiliaryTop];
 			--auxiliaryTop;
-		}*/
-		
+		}
+
+		--m_count;
 	}
 }
 
@@ -150,7 +141,8 @@ void Firm::printProviders()
 	}
 	for (int i{ 0 }; i <= m_top; ++i)
 	{
-		std::cout << "provider: " << m_stack[i].getName() << '\n';
+		std::cout << m_stack[i].getName() << ": ";
+		m_stack[i].printProducts();
 	}
 }
 
@@ -164,4 +156,14 @@ int Firm::findProvider(std::string& providerName)
 	return -1;
 }
 
-//destructor!!
+void Firm::addProduct(std::string& providerName, std::string& productName, int productQuantity) // функция добавления продукта при считывании с файла
+{
+	
+	int currentIndex{ findProvider(providerName) };
+	if (currentIndex == -1)
+	{
+		return;
+	}
+	Provider& currentProvider{ m_stack[currentIndex] };
+	currentProvider.addProduct(productName, productQuantity);
+}

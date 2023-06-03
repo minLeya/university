@@ -20,8 +20,8 @@ public:
 
 	void setName(std::string& name);
 	void setQuantity(int quantity);
-	void setNext(Product*& next);
-	void setPrev(Product*& prev);
+	void setNext(Product* const next);
+	void setPrev(Product* const prev);
 
 	std::string getName();
 	int getQuantity();
