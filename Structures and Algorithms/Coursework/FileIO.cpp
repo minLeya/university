@@ -8,13 +8,13 @@
 bool FileIO::writeFirmFromFile(Firm& firm)
 {
 	namespace fs = std::filesystem;
-	std::ifstream inputFile{ "input.txt" };
+	std::ifstream inputFile{ "file.txt" };
 	if (!inputFile.is_open())
 	{
 		std::cout << "\ncouldn't open file\n";
 		return false;
 	}
-	if (fs::file_size("input.txt") == 0)
+	if (fs::file_size("file.txt") == 0)
 	{
 		std::cout << "\nfile is empty!\n";
 		return false;
@@ -36,12 +36,12 @@ bool FileIO::writeFirmFromFile(Firm& firm)
 			std::string productName{ line.substr(currentPosition, endOfProductName) };
 			std::size_t endOfProductQuantity{ line.find(';') };
 			int productQuantity{ std::stoi(line.substr(endOfProductName + 1, endOfProductQuantity)) };
+			firm.addProduct(providerName, productName, productQuantity);
 			if (line.find(';') == std::string::npos)
 			{
 				break;
 			}
 			line = line.substr(line.find(';') + 1);
-			firm.addProduct(providerName, productName, productQuantity);
 		}
 	}
 	return true;
@@ -49,15 +49,14 @@ bool FileIO::writeFirmFromFile(Firm& firm)
 
 void FileIO::writeFirmToFile(Firm& firm)
 {
-	std::ofstream outputFile{ "output.txt" };
-	outputFile << "Firm:" << firm.getName() << '\n';
+	std::ofstream outputFile{ "file.txt" };
+	outputFile << firm.getName() << '\n';
 	
 	for (int i{ 0 }; i <= firm.getTop(); ++i)
 	{
 		Provider currentProvider{ firm.getProvider(i) };
-		outputFile << "Provider:" << currentProvider.getName() << '\n';
+		outputFile << currentProvider.getName() << '\n';
 		Product* currentProduct{ currentProvider.getProductHead() };
-		outputFile << "Products:";
 		while (currentProduct != nullptr)
 		{
 			outputFile << currentProduct->getName() << ',' <<

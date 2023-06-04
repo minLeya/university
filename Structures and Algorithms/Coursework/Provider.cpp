@@ -96,15 +96,11 @@ void Provider::addProduct()
 			int newQuantity{ getValue() };
 
 			Product* newProduct{ new Product{newName, newQuantity} };
-			// todo: fix this
-			//doen't work if i try to add new element before the first element
-			//upd it works but i've to test it more
 			newProduct->setNext(current);
 			
 			if (current == m_productHead)
 			{
 				m_productHead = newProduct;
-				//newProduct->setPrev(nullptr);
 			}
 			else
 			{
@@ -245,5 +241,12 @@ void Provider::addProduct(std::string& productName, int productQuantity) // функ
 
 Provider::~Provider()
 {
-
+	Product* current{ m_productHead };
+	Product* old{ current };
+	while (current != nullptr)
+	{
+		current = current->getNext();
+		delete old;
+		old = current;
+	}
 }

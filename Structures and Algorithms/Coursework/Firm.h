@@ -18,20 +18,19 @@ private:
 	Provider m_stack[constants::size]{};
 	int m_top{}; //указатель на число-топ
 	int m_count{}; //количество элементов
-	//Provider* m_providerHead{};
+	
 public:
 	Firm();
 	Firm(std::string& name);
+	~Firm() = default;
 
 	void setName(std::string& name);
 	void setTop(int newTop);
 	void setCount(int newCount);
-	//void setProviderHead(Provider* newHead);
 
 	std::string getName();
 	int getTop();
 	int getCount();
-	//Provider* getProviderHead();
 	const Provider& getProvider(int index) const;
 	Provider& getProvider(int index);
 

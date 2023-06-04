@@ -20,14 +20,12 @@ public:
 	void setName(std::string& name);
 	void setProductHead(Product* producthead);
 	
-
 	int getValue();
 	std::string getString();
 
 	std::string getName();
 	Product* getProductHead() const;
 	
-
 	bool isProviderEmpty();
 	void addProduct();
 	void addProduct(std::string& productName, int productQuantity);
@@ -35,7 +33,7 @@ public:
 	void removeProduct(std::string& providerName, std::string& productName);
 	void printProducts();
 
-	 //destructor
+	 // todo: destructor
 	~Provider();
 };
 

@@ -3,7 +3,6 @@
 
 #include <string>
 
-
 class Product
 {
 private:
@@ -28,6 +27,7 @@ public:
 	Product* getNext();
 	Product* getPrev();
 
+	~Product() = default;
 };
 
 #endif // !PRODUCT_H

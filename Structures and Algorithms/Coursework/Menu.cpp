@@ -16,6 +16,7 @@ void menuText()
 		"6. add a product to provider\n" <<
 		"7. find a product in provider \n" <<
 		"8. remove a product from provider\n" <<
+		"9. empty and rename the firm\n" <<
 		"-1. exit\n";
 }
 
@@ -154,6 +155,14 @@ void menuRemoveProduct(Firm& firm)
 	current.removeProduct(providerName, productName);
 }
 
+void menuEmptyAndRenameFirm(Firm& firm)
+{
+	firm.~Firm();
+	std::cout << "\nenter the new name for the firm: ";
+	std::string firmName{ getString() };
+	firm = Firm{ firmName };
+}
+
 void menu(Firm& firm, int command)
 {
 	switch (command)
@@ -182,6 +191,9 @@ void menu(Firm& firm, int command)
 	case 8:
 		menuRemoveProduct(firm);
 		break;
+	case 9:
+		menuEmptyAndRenameFirm(firm);
+		break;
 	}
 }
 
@@ -209,12 +221,5 @@ void run()
 	 if (choice == 1)
 	 {
 		 fileIO.writeFirmToFile(firm);
-	 }
-
-	 std::cout << "\ndelete struct? 0 - no, 1 - yes: ";
-	 int option { getNumber() };
-	 if (option == 1)
-	 {
-		 //firm.~Firm();
 	 }
 }

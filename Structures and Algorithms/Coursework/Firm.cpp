@@ -2,13 +2,13 @@
 #include <iostream>
 
 Firm::Firm() : m_name{ "Default Firm" }, m_stack{},
-m_count{ 0 }, m_top{ -1 } //m_stackPointer{ 0 } //top{0}
+				m_count{ 0 }, m_top{ -1 } 
 {
 
 }
 
 Firm::Firm(std::string& name) : m_name{ name }, m_stack{},
-m_count{ 0 }, m_top{ -1 } //m_stackPointer{ 0 }//top{0}
+				m_count{ 0 }, m_top{ -1 } 
 {
 
 }
@@ -70,7 +70,7 @@ std::string Firm::getString()
 	return string;
 }
 
-void Firm::addProvider(std::string& name) //add to the end
+void Firm::addProvider(std::string& name)
 {
 	if (isProviderFull())
 	{
