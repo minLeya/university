@@ -1,7 +1,7 @@
 DNS
 RusApple
-iPhone 13,10;iPhone 14 Pro Max,7;MacBook,10
-Laptop World
-Asus Vivobook 15,4;Acer Nitro 5,7;Dell Inspiron 15,8;HP Pavilion,9
+iPhone,15;MacBook,10
+Laptop
+Asus,30;Acer,20;Dell,15;HP,13
 Electronic
-Samsung Galaxy S23 Ultra,15;Xiaomi 13 Pro,11
+Samsung,15;Xiaomi,11
