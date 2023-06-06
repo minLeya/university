@@ -1,7 +1,0 @@
-Firm:DNS
-Provider:RusApple
-Products:iPhone 13,10;iPhone 14 Pro Max,7;
-Provider:Laptop World
-Products:Asus Vivobook 15,4;Acer Nitro 5,7;Dell Inspiron 15,8;
-Provider:Electronic
-Products:Samsung Galaxy S23 Ultra,15;
