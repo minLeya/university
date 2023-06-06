@@ -47,61 +47,70 @@ std::string Provider::getString()
 	return string;
 }
 
-bool Provider::isProviderEmpty()
+bool Provider::isProviderEmpty() const
 {
-	return(m_productHead == nullptr);
+	return (m_productHead == nullptr); //список незакольцованный без заголовочного элемента
 }
 
-void Provider::addProduct()
+// добавление товара
+void Provider::addProduct() 
 {
-	if (isProviderEmpty())
+	if (isProviderEmpty()) //если у поставщика нет товаров
 	{
-		std::cout << "\nEnter new product's name: ";
+		std::cout << "\nenter new product's name: ";
 		std::string newName{ getString() };
-		std::cout << "\nEnter new product's quantity: ";
+		std::cout << "\nenter new product's quantity: ";
 		int newQuantity{ getValue() };
 		
-		Product* newProduct{ new Product{newName, newQuantity} };
+		Product* newProduct{ new Product{newName, newQuantity} }; //создается товар, заполняются информационные поля
 
-		m_productHead = newProduct;
+		m_productHead = newProduct; //добавленный товар становится m_productHead
 		
-		newProduct->setNext(nullptr);
-		newProduct->setPrev(nullptr);
+		newProduct->setNext(nullptr); 
+		newProduct->setPrev(nullptr); 
 	}
-	else
+	else //если у поставщика есть товары
 	{
-		std::cout << "\nEnter 1 to add before specific product, enter 2 to add after: ";
+		//спрашиваем у пользователя, добавить до (1) или после (2) определенного товара
+		std::cout << "\nenter 1 to add before specific product, enter 2 to add after: "; 
 		int choice{ getValue() };
 
-		if (choice == 1)//before
+		if (choice == 1) //до
 		{
-			std::cout << "\nEnter the name of product before which you'd like to add new element: ";
+			//спрашиваем у пользователя название товара, до которого будет добавляться новый товар
+			std::cout << "\nenter the name of product before which you'd like to add new element: ";
 			std::string currentItem{ getString() };
 
+			//поиск этого товара в списке
 			Product* current{ m_productHead };
 			while (current != nullptr && current->getName() != currentItem)
 			{
 				current = current->getNext();
 			}
-
+			
+			//если товар не найден
 			if (current == nullptr)
 			{
-				std::cerr << "There's no such product in the list!\n";
+				std::cerr << "there's no such product in the list!\n";
 				return;
 			}
 
-			std::cout << "\nEnter new product's name: ";
+			//товар найден - спршиваем название и количество нового товара
+			std::cout << "\nenter new product's name: ";
 			std::string newName{ getString() };
-			std::cout << "\nEnter new product's quantity: ";
+			std::cout << "\nenter new product's quantity: ";
 			int newQuantity{ getValue() };
-
+			
+			//создаем товар
 			Product* newProduct{ new Product{newName, newQuantity} };
 			newProduct->setNext(current);
 			
+			//если добавляется до первого элемента в списке
 			if (current == m_productHead)
 			{
 				m_productHead = newProduct;
 			}
+			//иначе
 			else
 			{
 				Product* temp{ current->getPrev() };
@@ -112,28 +121,33 @@ void Provider::addProduct()
 			
 			current->setPrev(newProduct);
 		}
-		else if (choice == 2)//after
+		else if (choice == 2) //после
 		{
-			std::cout << "\nEnter the name of product after which you'd like to add new element: ";
+			//спрашиваем у пользователя название товара, после которого будет добавляться новый товар
+			std::cout << "\nenter the name of product after which you'd like to add new element: ";
 			std::string currentItem{ getString() };
 
+			//поиск этого товара в списке
 			Product* current{ m_productHead };
 			while (current != nullptr && current->getName() != currentItem)
 			{
 				current = current->getNext();
 			}
 
+			//если товар не найден
 			if (current == nullptr)
 			{
-				std::cerr << "There's no such product in the list!\n";
+				std::cerr << "there's no such product in the list!\n";
 				return;
 			}
 
-			std::cout << "\nEnter new product's name: ";
+			//товар найден - спршиваем название и количество нового товара
+			std::cout << "\nenter new product's name: ";
 			std::string newName{ getString() };
-			std::cout << "\nEnter new product's quantity: ";
+			std::cout << "\nenter new product's quantity: ";
 			int newQuantity{ getValue() };
 
+			//создаем новый товар
 			Product* newProduct{ new Product{newName, newQuantity} };
 
 			Product* temp{ current->getNext() };
@@ -143,47 +157,58 @@ void Provider::addProduct()
 				temp->setPrev(newProduct);
 			current->setNext(newProduct);
 		}
-		else
+		else //если пользователь ввел не 1 и не 2
 		{
-			std::cerr << "\nInput error, please repeat!\n";
+			std::cerr << "\ninput error, please repeat!\n";
 		}
 	}
 }
 
-bool Provider::findProduct(std::string& productName) 
+//поиск товара
+bool Provider::findProduct(const std::string& productName) 
 {
+	//начинаем с первого элемента
 	Product* current{ m_productHead };
-	while (current != nullptr && current->getName() != productName)
+	//поиск продолжается до тех пор, пока не дойдем до конца списка
+	//или не найдем элемент, который ищем
+	while (current != nullptr)
 	{
+		if (current->getName() == productName)
+			return true;
+
 		current = current->getNext();
 	}
-	
-	if (current == nullptr)
-		return false;
 
-	return true;
+	return false;
+	
 }
 
-
+//удаление товара из списка
 void Provider::removeProduct(std::string& providerName, std::string& productName)
 {
+	//если в поставщике нет товаров
 	if (isProviderEmpty())
 	{
 		std::cout << "provider " << providerName << " is empty\n";
+		return;
 	}
+	//поиск товара у данного поставщика
 	if (!findProduct(productName))
 	{
 		std::cout << "\ncouldn't find this product\n";
 		return;
 	}
 	
+	//поиск удаляемого товара
 	Product* current{ m_productHead };
 	while (current->getName() != productName)
 		current = current->getNext();
 
+	//если удаляемый товар - первый элемент
 	if (current == m_productHead)
 		m_productHead = current->getNext();
 
+	// если удаляемый товар - НЕ первый элемент
 	if (current->getPrev() != nullptr)
 		current->getPrev()->setNext(current->getNext());
 	if (current->getNext() != nullptr)
@@ -192,14 +217,17 @@ void Provider::removeProduct(std::string& providerName, std::string& productName
 	delete current;
 }
 
-void Provider::printProducts()
+// вывод товаров на экран
+void Provider::printProducts() const
 {
+	// если у поставщика нет товаров
 	if (isProviderEmpty())
 	{
 		std::cout << "there's no products\n";
 		return;
 	}
-	Product* current{ m_productHead };
+	// начинаем с первого элемента
+	Product* current{ m_productHead }; //nullptr
 	while (current != nullptr)
 	{
 		std::cout  << current->getName() << " (" << current->getQuantity() << ")";
@@ -211,8 +239,11 @@ void Provider::printProducts()
 	}
 }
 
-void Provider::addProduct(std::string& productName, int productQuantity) // функция добаваления продукта при считывании с файла
-{																		// добавляет последовательно. так, как в самом файле
+// функция добавления продукта в список при считывании с файла
+// добавляет последовательно. так, как в самом файле
+void Provider::addProduct(std::string& productName, int productQuantity)
+{					
+	//создается новый продукт
 	Product* newProduct{ new Product{productName, productQuantity} };
 
 	if (isProviderEmpty())
@@ -224,7 +255,7 @@ void Provider::addProduct(std::string& productName, int productQuantity) // функ
 	}
 	else
 	{
-		Product* current{ m_productHead };
+		Product* current{ m_productHead }; //переменная для отслеживания
 		while (current->getNext() != nullptr)
 		{
 			current = current->getNext();
@@ -239,6 +270,7 @@ void Provider::addProduct(std::string& productName, int productQuantity) // функ
 	}
 }
 
+//деструтор 
 Provider::~Provider()
 {
 	Product* current{ m_productHead };

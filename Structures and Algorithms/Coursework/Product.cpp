@@ -42,12 +42,12 @@ int Product::getQuantity()
 	return m_quantity;
 }
 
-Product* Product::getNext()
+Product*& Product::getNext()
 {
 	return m_next;
 }
 
-Product* Product::getPrev()
+Product*& Product::getPrev()
 {
 	return m_prev;
 }

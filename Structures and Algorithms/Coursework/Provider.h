@@ -1,39 +1,43 @@
 #ifndef PROVIDER_H
 #define PROVIDER_H
-//поставщик (имя) - композиция товаров (название, количество)
-//статический стек двоичных дунаправленных списков
+
 #include "Product.h"
 
 #include <string>
- //операции с двунаправленным списком
+ 
 class Provider
 {
 private:
-	std::string m_name{};
+	std::string m_name{}; //имя поставщика
 
-	Product* m_productHead{};
+	Product* m_productHead{}; //указатель на первый реальный элемент списка товаров
 
 public:
+	//конструкторы
 	Provider();
 	Provider(std::string& name);
 
+	//set-методы
 	void setName(std::string& name);
 	void setProductHead(Product* producthead);
 	
+	//вспомогательные функции
 	int getValue();
 	std::string getString();
 
+	//get-методы
 	std::string getName();
 	Product* getProductHead() const;
 	
-	bool isProviderEmpty();
+	//операции с двунаправленным списком
+	bool isProviderEmpty() const;
 	void addProduct();
 	void addProduct(std::string& productName, int productQuantity);
-	bool findProduct(std::string& productName);
+	bool findProduct(const std::string& productName);
 	void removeProduct(std::string& providerName, std::string& productName);
-	void printProducts();
+	void printProducts() const;
 
-	 // todo: destructor
+	//деструктор
 	~Provider();
 };
 

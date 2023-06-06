@@ -8,15 +8,16 @@
 void menuText()
 {
 	std::cout << "\nwhat do you want to do?\n" <<
-		"1. name a firm\n" <<
-		"2. add a provider\n" <<
-		"3. find a provider\n" <<
-		"4. print structure\n" <<
-		"5. remove a provider\n" <<
-		"6. add a product to provider\n" <<
-		"7. find a product in provider \n" <<
-		"8. remove a product from provider\n" <<
-		"9. empty and rename the firm\n" <<
+		"1. add a provider\n" <<
+		"2. find a provider\n" <<
+		"3. print structure\n" <<
+		"4. remove a provider\n" <<
+		"5. add a product to provider\n" <<
+		"6. find a product in provider \n" <<
+		"7. remove a product from provider\n" <<
+		"8. give a name to firm\n" <<
+		"9. load data from file\n" <<
+		"0. load data to file\n" <<
 		"-1. exit\n";
 }
 
@@ -114,7 +115,7 @@ void menuFindProduct(Firm& firm)
 	int productCount{};
 	for (int i{ 0 }; i < constants::size; ++i)
 	{
-		Provider current{ firm.getProvider(i) };
+		Provider& current{ firm.getProvider(i) };
 
 		if (current.findProduct(name))
 		{
@@ -125,7 +126,7 @@ void menuFindProduct(Firm& firm)
 	if (productCount == 0)
 		std::cout << "product " << name << " is not found\n";
 	else
-		std::cout << "total number of product " << name <<": " << productCount << '\n';
+		std::cout << "total number of product " << name << ": " << productCount << '\n';
 }
 
 void menuRemoveProduct(Firm& firm)
@@ -155,44 +156,60 @@ void menuRemoveProduct(Firm& firm)
 	current.removeProduct(providerName, productName);
 }
 
-void menuEmptyAndRenameFirm(Firm& firm)
+void menuRenameFirm(Firm& firm)
 {
-	firm.~Firm();
-	std::cout << "\nenter the new name for the firm: ";
-	std::string firmName{ getString() };
-	firm = Firm{ firmName };
+	std::cout << "\enter new name of firm: ";
+	std::string newName{ getString() };
+	firm.setName(newName);
 }
 
-void menu(Firm& firm, int command)
+void menuLoadFromFile(Firm& firm, FileIO& fileIO)
+{
+	if (!fileIO.writeFirmFromFile(firm))
+	{
+		std::cout << "\ncould not read firm structure from file\n";
+		return;
+	}
+}
+
+void menuLoadToFile(Firm& firm, FileIO& fileIO)
+{
+	fileIO.writeFirmToFile(firm);
+}
+
+void menu(Firm& firm, FileIO& fileIO, int command)
 {
 	switch (command)
 	{
 	case 1:
-		menuNameFirm(firm); 
+		menuAddProvider(firm); 
 		break;
 	case 2:
-		menuAddProvider(firm);
-		break;
-	case 3:
 		menuFindProvider(firm); 
 		break;
-	case 4:
+	case 3:
 		menuPrintProviders(firm); 
 		break;
-	case 5:
+	case 4:
 		menuRemoveProvider(firm); 
 		break;
+	case 5:
+		menuAddProduct(firm); 
+		break;
 	case 6:
-		menuAddProduct(firm);
+		menuFindProduct(firm); 
 		break;
 	case 7:
-		menuFindProduct(firm);
+		menuRemoveProduct(firm); 
 		break;
 	case 8:
-		menuRemoveProduct(firm);
+		menuRenameFirm(firm); 
 		break;
 	case 9:
-		menuEmptyAndRenameFirm(firm);
+		menuLoadFromFile(firm, fileIO);
+		break;
+	case 0:
+		menuLoadToFile(firm, fileIO);
 		break;
 	}
 }
@@ -201,25 +218,12 @@ void run()
 {
 	Firm firm{};
 	FileIO fileIO{};
-	if (!fileIO.writeFirmFromFile(firm))
-	{
-		std::cout << "\ncould not read firm structure from file\n";
-		return;
-	}
-
 
 	int command{};
 	while (command != -1)
 	{
 		menuText();
 		command = getNumber();
-		menu(firm, command);
+		menu(firm, fileIO, command);
 	}
-
-	 std::cout << "\nsave firm to file? 0 - no, 1 - yes: ";
-	 int choice{ getNumber() };
-	 if (choice == 1)
-	 {
-		 fileIO.writeFirmToFile(firm);
-	 }
 }

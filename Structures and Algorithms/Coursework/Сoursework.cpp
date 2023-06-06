@@ -8,11 +8,10 @@
 #include "Product.h"
 #include "Menu.h"
 #include <string>
+#include "FileIO.h"
 
 int main()
 {
 	run();
-	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
-	_CrtDumpMemoryLeaks();
 	return 0;
 }

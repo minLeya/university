@@ -5,6 +5,7 @@
 #include "Firm.h"
 #include "FileIO.h"
 
+// загрузка из файла
 bool FileIO::writeFirmFromFile(Firm& firm)
 {
 	namespace fs = std::filesystem;
@@ -28,7 +29,6 @@ bool FileIO::writeFirmFromFile(Firm& firm)
 		std::string providerName{ line };
 		firm.addProvider(providerName);
 		std::getline(inputFile, line);
-		std::size_t endOfProductInfo{ line.find(';') };
 		std::size_t currentPosition{ 0 };
 		while (true)
 		{
@@ -47,23 +47,26 @@ bool FileIO::writeFirmFromFile(Firm& firm)
 	return true;
 }
 
+//загрузка в файл
 void FileIO::writeFirmToFile(Firm& firm)
 {
 	std::ofstream outputFile{ "file.txt" };
 	outputFile << firm.getName() << '\n';
-	
+
 	for (int i{ 0 }; i <= firm.getTop(); ++i)
 	{
-		Provider currentProvider{ firm.getProvider(i) };
-		outputFile << currentProvider.getName() << '\n';
+		Provider& currentProvider{ firm.getProvider(i) };
+		outputFile  << currentProvider.getName() << '\n';
 		Product* currentProduct{ currentProvider.getProductHead() };
 		while (currentProduct != nullptr)
 		{
-			outputFile << currentProduct->getName() << ',' <<
-				currentProduct->getQuantity() << ';';
+			outputFile << currentProduct->getName() << ',' << currentProduct->getQuantity();
+			if (currentProduct->getNext() != nullptr)
+				outputFile << ';';
+			else
+				outputFile << '\n';
 
 			currentProduct = currentProduct->getNext();
 		}
-		outputFile << '\n';
 	}
 }

@@ -1,5 +1,6 @@
 #include "Firm.h"
 #include <iostream>
+#include <functional>
 
 Firm::Firm() : m_name{ "Default Firm" }, m_stack{},
 				m_count{ 0 }, m_top{ -1 } 
@@ -53,11 +54,13 @@ Provider& Firm::getProvider(int index)
 	return m_stack[index];
 }
 
+// проверка стека на пустоту
 bool Firm::isProviderEmpty()
 {
 	return m_count == 0;
 }
 
+// проверка стека на полноту
 bool Firm::isProviderFull()
 {
 	return m_count >= constants::size;
@@ -70,17 +73,23 @@ std::string Firm::getString()
 	return string;
 }
 
+// добавление поставщика
 void Firm::addProvider(std::string& name)
 {
+	// если стек полон
 	if (isProviderFull())
 	{
 		std::cout << "stack is full\n";
 	}
+	// иначе
 	else
 	{
-		Provider newProvider{};
-		newProvider.setName(name);
+		// создаетс€ поставщик
+		Provider newProvider{ name };
+		// ставитс€ на следующую €чейку после вершины стека
 		m_stack[m_top + 1] = newProvider;
+		// указатель на вершину стека и количество элментов в стеке
+		// увеличиваютс€ на 1
 		++m_top;
 		++m_count;
 	}
@@ -101,22 +110,22 @@ void Firm::removeProvider()
 		std::cout << "\nthere's no such provider\n";
 		return;
 	}
-	
-	if (index == m_top) 
+
+	if (index == m_top)
 	{
 		--m_top;
 		--m_count;
 	}
 	else
-	{	
+	{
 		int auxiliaryTop{ -1 };
-		Provider auxiliaryStack[constants::size]{};
+		Provider* auxiliaryStack[constants::size]{};
 		while (m_top >= 0)
 		{
 			if (m_top != index)
 			{
 				++auxiliaryTop;
-				auxiliaryStack[auxiliaryTop] = m_stack[m_top];
+				auxiliaryStack[auxiliaryTop] = &m_stack[m_top];
 			}
 			--m_top;
 		}
@@ -124,7 +133,7 @@ void Firm::removeProvider()
 		while (auxiliaryTop >= 0)
 		{
 			++m_top;
-			m_stack[m_top] = auxiliaryStack[auxiliaryTop];
+			m_stack[m_top] = *auxiliaryStack[auxiliaryTop];
 			--auxiliaryTop;
 		}
 
@@ -132,8 +141,10 @@ void Firm::removeProvider()
 	}
 }
 
+// вывод поставщиков на экран
 void Firm::printProviders()
 {
+	// если поставщиков нет
 	if (isProviderEmpty())
 	{
 		std::cout << "\nempty, there's no provider\n";
@@ -146,24 +157,27 @@ void Firm::printProviders()
 	}
 }
 
+// поиск поставщика по его имени
 int Firm::findProvider(std::string& providerName)
 {
 	for (int i{ 0 }; i <= m_top; ++i)
 	{
 		if (m_stack[i].getName() == providerName)
-			return i;
+			return i; // возвращает индекс, если поставщик найден
 	}
-	return -1;
+	return -1; //возвращает -1, если не найден
 }
 
-void Firm::addProduct(std::string& providerName, std::string& productName, int productQuantity) // функци€ добавлени€ продукта при считывании с файла
+// функци€ добавлени€ продукта при считывании с файла
+void Firm::addProduct(std::string& providerName, std::string& productName, int productQuantity) 
 {
-	
+	// ищем поставщика по имени
 	int currentIndex{ findProvider(providerName) };
 	if (currentIndex == -1)
 	{
 		return;
 	}
+	// добавл€ем в стек
 	Provider& currentProvider{ m_stack[currentIndex] };
 	currentProvider.addProduct(productName, productQuantity);
 }
