@@ -1,7 +1,0 @@
-DNS
-RusApple
-iPhone,15;MacBook,10
-Laptop
-Asus,30;Acer,20;Dell,15;HP,13
-Electronic
-Samsung,15;Xiaomi,11
