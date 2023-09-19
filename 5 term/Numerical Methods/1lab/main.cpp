@@ -12,9 +12,9 @@ namespace constants
 
 void printIterativeMethodTableHeader(std::ofstream& outputFile)
 {
-    outputFile << "k" << ";" << "x_k" << ";" << "y_k" << ";" << "z_k" << ";" <<
-        "x_k+1" << ";" << "y_k+1" << ";" << "z_k+1" << ";" << "|x_k+1 - x_k|" <<
-        ";" << "|y_k+1 - y_k|" << ";" << "|z_k+1 - z_k|" << ";" << "sum\n";
+    outputFile << "k" << " ;" << "x_k" << " ;" << "y_k" << " ;" << "z_k" << " ;" <<
+        "x_k+1" << " ;" << "y_k+1" << " ;" << "z_k+1" << " ;" << "|x_k+1 - x_k|" <<
+        " ;" << "|y_k+1 - y_k|" << " ;" << "|z_k+1 - z_k|" << " ;" << "sum\n";
 }
 
 double getNextX(double lastY, double lastZ)
@@ -48,11 +48,11 @@ void runIterativeMethodLoop(const double epsilon, std::ofstream& outputFile,
         double differenceZ{ std::abs(nextZ - lastZ) };
 
         double differenceSum{ differenceX + differenceY + differenceZ };
-
-        outputFile << currentIteration << ";" << lastX << ";" << lastY << ";" <<
-            lastZ << ";" << nextX << ";" << nextY << ";" << nextZ << ";" <<
-            differenceX << ";" << differenceY << ";" << differenceZ << ";" <<
+        outputFile << currentIteration << "\t;" << lastX << "\t;" << lastY << "\t;" <<
+            lastZ << "\t;" << nextX << "\t;" << nextY << "\t;" << nextZ << "\t;" <<
+            differenceX << "\t;" << differenceY << "\t;" << differenceZ << "\t;" <<
             differenceSum << '\n';
+
 
         ++currentIteration;
         lastX = nextX;
@@ -114,9 +114,9 @@ void runSeidelMethod(std::ofstream& outputFile, double lastX, double lastY, doub
 
         double differenceSum{ differenceX + differenceY + differenceZ };
 
-        outputFile << currentIteration << ";" << lastX << ";" << lastY << ";" <<
-            lastZ << ";" << nextX << ";" << nextY << ';' << nextZ << ';' <<
-            differenceX << ';' << differenceY << ';' << differenceZ << ';' <<
+        outputFile << currentIteration << "\t;" << lastX << "\t;" << lastY << "\t;" <<
+            lastZ << "\t;" << nextX << "\t;" << nextY << "\t;" << nextZ << "\t;" <<
+            differenceX << "\t;" << differenceY << "\t;" << differenceZ << "\t;" <<
             differenceSum << '\n';
 
         ++currentIteration;
@@ -133,6 +133,9 @@ void runSeidelMethod(std::ofstream& outputFile, double lastX, double lastY, doub
 
 int main()
 {
+
+    setlocale(LC_ALL, "Russian");
+
     std::ofstream outputFile{ "output.csv" };
 
     printInitialInformation();
