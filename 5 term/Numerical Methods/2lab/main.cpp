@@ -179,14 +179,17 @@ int main()
 
 	printIterativeMethodTableHeader(constants::firstEpsilon);
 	runIterativeMethodLoop(constants::firstEpsilon, constants::firstDelta, firstX);
+	printIterativeMethodTableHeader(constants::secondEpsilon);
 	runIterativeMethodLoop(constants::secondEpsilon, constants::secondDelta, firstX);
 	std::cout << '\n';
 	printNewtonMethodTableHeader(constants::firstEpsilon);
 	runNewtonMethodLoop(constants::firstEpsilon, constants::firstDelta, firstX);
+	printNewtonMethodTableHeader(constants::secondEpsilon);
 	runNewtonMethodLoop(constants::secondEpsilon, constants::secondDelta, firstX);
 	std::cout << "\n";
 	printModifiedNewtonMethodTableHeader(constants::firstEpsilon);
 	runNodifiedNewtonMethodLoop(constants::firstEpsilon, constants::firstDelta, firstX);
+	printModifiedNewtonMethodTableHeader(constants::secondEpsilon);
 	runNodifiedNewtonMethodLoop(constants::secondEpsilon, constants::secondDelta, firstX);
 	std::cout << '\n';
 	
