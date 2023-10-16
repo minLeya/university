@@ -106,7 +106,7 @@ void runNewtonMethodLoop(const double epsilon, const double delta, double lastX)
 
 		lastX = nextX;
 
-		if (xDifference <= epsilon || functionValue <= delta)
+		if (xDifference <= epsilon && functionValue <= delta)
 			keepGoing = false;
 
 		++currentIteration;
@@ -150,7 +150,7 @@ void runNodifiedNewtonMethodLoop(const double epsilon, const double delta, doubl
 
 		lastX = nextX;
 
-		if (xDifference <= epsilon || functionValue <= delta)
+		if (xDifference <= epsilon && functionValue <= delta)
 			keepGoing = false;
 
 		++currentIteration;
@@ -160,16 +160,35 @@ void runNodifiedNewtonMethodLoop(const double epsilon, const double delta, doubl
 	std::cout << '\n';
 }
 
+double checkIfFromSegment(double firstX)
+{
+	if (firstX >= 0.25 && firstX <= 0.5)
+		return firstX;
+	else
+		return -1;
+}
+
 int main()
 {
 	setlocale(LC_ALL, "Russian");
+	std::cout << "13 вариант. Задание: 2lgx - x/2 + 1 = 0.\nВведите начальное приближение х_0: ";
+	double firstX{};
+	std::cin >> firstX;
+	if (checkIfFromSegment(firstX) == -1)
+		return -1;
+
+	printIterativeMethodTableHeader(constants::firstEpsilon);
+	runIterativeMethodLoop(constants::firstEpsilon, constants::firstDelta, firstX);
+	runIterativeMethodLoop(constants::secondEpsilon, constants::secondDelta, firstX);
+	std::cout << '\n';
 	printNewtonMethodTableHeader(constants::firstEpsilon);
-	runNewtonMethodLoop(constants::firstEpsilon, constants::firstDelta, 0.25);
+	runNewtonMethodLoop(constants::firstEpsilon, constants::firstDelta, firstX);
+	runNewtonMethodLoop(constants::secondEpsilon, constants::secondDelta, firstX);
 	std::cout << "\n";
 	printModifiedNewtonMethodTableHeader(constants::firstEpsilon);
-	runNodifiedNewtonMethodLoop(constants::firstEpsilon, constants::firstDelta, 0.25);
+	runNodifiedNewtonMethodLoop(constants::firstEpsilon, constants::firstDelta, firstX);
+	runNodifiedNewtonMethodLoop(constants::secondEpsilon, constants::secondDelta, firstX);
 	std::cout << '\n';
-	printIterativeMethodTableHeader(constants::firstEpsilon);
-	runIterativeMethodLoop(constants::firstEpsilon, constants::firstDelta, 0.5);
+	
 	return 0;
 }
