@@ -8,6 +8,21 @@ double getFunctionValue(double x)
 	return (2 * log10(x) - x / 2.0 + 1);
 }
 
+double getFirstDerivative(double x)
+{
+	return (2 / (x * log(10)) - 0.5);
+}
+
+double getSecondDeriative(double x)
+{
+	return (2 / log(10) * (-1 / pow(x, 2)));
+}
+
+double convergenceCondition(double x)
+{
+	return (getFunctionValue(x) * getSecondDeriative(x));
+}
+
 double getNextForIterativeMethod(double lastX)
 {
 	double functionValue{ getFunctionValue(lastX) };
@@ -182,16 +197,26 @@ int main()
 	printIterativeMethodTableHeader(constants::secondEpsilon);
 	runIterativeMethodLoop(constants::secondEpsilon, constants::secondDelta, firstX);
 	std::cout << '\n';
-	printNewtonMethodTableHeader(constants::firstEpsilon);
-	runNewtonMethodLoop(constants::firstEpsilon, constants::firstDelta, firstX);
-	printNewtonMethodTableHeader(constants::secondEpsilon);
-	runNewtonMethodLoop(constants::secondEpsilon, constants::secondDelta, firstX);
-	std::cout << "\n";
-	printModifiedNewtonMethodTableHeader(constants::firstEpsilon);
-	runNodifiedNewtonMethodLoop(constants::firstEpsilon, constants::firstDelta, firstX);
-	printModifiedNewtonMethodTableHeader(constants::secondEpsilon);
-	runNodifiedNewtonMethodLoop(constants::secondEpsilon, constants::secondDelta, firstX);
-	std::cout << '\n';
+	//условие для начального приближения для метода Ньютона и модиф. метода Ньютона
+	double checkCondition{ convergenceCondition(firstX) };
+	if (checkCondition > 0)
+	{
+		printNewtonMethodTableHeader(constants::firstEpsilon);
+		runNewtonMethodLoop(constants::firstEpsilon, constants::firstDelta, firstX);
+		printNewtonMethodTableHeader(constants::secondEpsilon);
+		runNewtonMethodLoop(constants::secondEpsilon, constants::secondDelta, firstX);
+		std::cout << "\n";
+		printModifiedNewtonMethodTableHeader(constants::firstEpsilon);
+		runNodifiedNewtonMethodLoop(constants::firstEpsilon, constants::firstDelta, firstX);
+		printModifiedNewtonMethodTableHeader(constants::secondEpsilon);
+		runNodifiedNewtonMethodLoop(constants::secondEpsilon, constants::secondDelta, firstX);
+		std::cout << '\n';
+	}
+	else
+	{
+		std::cout << "Не выполняется достаточное условие сходимости метода Ньютона!\n" <<
+			"Не выполняется достаточное условие сходимости модифицированного метода Ньютона!\n\n";
+	}
 	
 	return 0;
 }
