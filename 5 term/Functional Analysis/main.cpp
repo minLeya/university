@@ -39,8 +39,8 @@ void runIterativeMethod(const double epsilon, const double alpha, double lastX)
 
 		++currentIteration;
 	}
-	std::cout << "Найденный приближённый корень x = " << lastX
-		<< " получен на итерации i = " << currentIteration
+	std::cout << "РќР°Р№РґРµРЅРЅС‹Р№ РїСЂРёР±Р»РёР¶С‘РЅРЅС‹Р№ РєРѕСЂРµРЅСЊ x = " << lastX
+		<< " РїРѕР»СѓС‡РµРЅ РЅР° РёС‚РµСЂР°С†РёРё i = " << currentIteration
 		<< ", |x_n - x_n-1 | = " << std::setprecision(10) << std::fixed << xDifference<< '\n';
 }
 
