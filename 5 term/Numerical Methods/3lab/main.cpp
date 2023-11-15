@@ -52,34 +52,34 @@ double getNextXForNewtonsMethod(double lastX, double lastY)
 {
 	double firstFunctionValue{ getFirstFunctionValue(lastX, lastY) };
 	double secondFunctionValue{ getSecondFunctionValue(lastX, lastY) };
-	return (lastX + alpha(lastX, lastY) * firstFunctionValue + beta(lastX, lastY) * secondFunctionValue);
+	return (lastX - (lastX / (2 * lastX - lastY) * firstFunctionValue - 1 / (2 * lastX - lastY) * secondFunctionValue));
 }
 
 double getNextYForNewtonsMethod(double lastX, double lastY)
 {
 	double firstFunctionValue{ getFirstFunctionValue(lastX, lastY) };
 	double secondFunctionValue{ getSecondFunctionValue(lastX, lastY) };
-	return (lastY + gamma(lastX, lastY) * firstFunctionValue + sigma(lastX, lastY) * secondFunctionValue);
+	return (lastY - (-lastY / (2 * lastX - lastY) * firstFunctionValue + 2 / (2 * lastX - lastY) * secondFunctionValue));
 }
 
 double getNextXForModifiedNewtonsMethod(double lastX, double lastY, double firstX, double firstY)
 {
 	double firstFunctionValue{ getFirstFunctionValue(lastX, lastY) };
 	double secondFunctionValue{ getSecondFunctionValue(lastX, lastY) };
-	return (lastX + alpha(firstX, firstY) * firstFunctionValue + beta(firstX, firstY) * secondFunctionValue);
+	return (lastX - (firstX / (2 * firstX - firstY) * firstFunctionValue - 1 / (2 * firstX - firstY) * secondFunctionValue));
 }
 
 double getNextYForModifiedNewtonsMethod(double lastX, double lastY, double firstX, double firstY)
 {
 	double firstFunctionValue{ getFirstFunctionValue(lastX, lastY) };
 	double secondFunctionValue{ getSecondFunctionValue(lastX, lastY) };
-	return (lastY + gamma(firstX, firstY) * firstFunctionValue + sigma(firstX, firstY) * secondFunctionValue);
+	return (lastY - (-firstY / (2 * firstX - firstY) * firstFunctionValue + 2 / (2 * firstX - firstY) * secondFunctionValue));
 }
 
 void printHeader(const double epsilon, std::string method)
 {
 	std::cout << method << '\n';
-	std::cout << "РўРѕС‡РЅРѕСЃС‚СЊ " << epsilon << '\n';
+	std::cout << "Точность " << epsilon << '\n';
 	std::cout << std::string(140, '_') << std::endl;
 	std::cout << "|" << std::setw(6) << "k+1"
 		"|" << std::setw(10) << "x_k  "
@@ -130,7 +130,7 @@ void runIterativeMethod(const double epsilon, const double delta, double lastX, 
 				firstFunctionValue <= delta && secondFunctionValue <= delta)
 			{
 				keepGoing = false;
-				std::cout << "РљРѕСЂРЅРё:\n";
+				std::cout << "Корни:\n";
 				std::cout << "x = " << lastX << '\n';
 				std::cout << "y = " << lastY << '\n';
 			}
@@ -138,7 +138,7 @@ void runIterativeMethod(const double epsilon, const double delta, double lastX, 
 		else
 		{
 			keepGoing = false;
-			std::cout << "РС‚РµСЂР°С†РёРѕРЅРЅС‹Р№ РїСЂРѕС†РµСЃСЃ РѕРєРѕРЅС‡РµРЅ, С‚Р°Рє РєР°Рє РІ Р·РЅР°РјРµРЅР°С‚РµР»Рµ 0.\n";
+			std::cout << "Итерационный процесс окончен, так как в знаменателе 0.\n";
 		}	
 	}
 }
@@ -178,14 +178,14 @@ void runNewtonsMethod(const double epsilon, const double delta, double lastX, do
 				firstFunctionValue <= delta && secondFunctionValue <= delta)
 			{
 				keepGoing = false;
-				std::cout << "РљРѕСЂРЅРё:\n";
+				std::cout << "Корни:\n";
 				std::cout << "x = " << lastX << '\n';
 				std::cout << "y = " << lastY << '\n';
 			}
 		}
 		else
 		{
-			std::cout << "РС‚РµСЂР°С†РёРѕРЅРЅС‹Р№ РїСЂРѕС†РµСЃСЃ РјРµС‚РѕРґР° РќСЊСЋС‚РѕРЅР° РѕРєРѕРЅС‡РµРЅ, С‚Р°Рє РєР°Рє РјР°С‚СЂРёС†Р° РЇРєРѕР±Рё РІС‹СЂРѕР¶РґРµРЅРЅР°СЏ.\n";
+			std::cout << "Итерационный процесс метода Ньютона окончен, так как матрица Якоби вырожденная.\n";
 
 			keepGoing = false;
 		}
@@ -196,9 +196,10 @@ void runModifiedNewtonsMethod(const double epsilon, const double delta, double l
 {
 	int currentIteration{ 1 };
 	bool keepGoing{ true };
-	while (keepGoing)
+	bool convergence{ true };
+	while(keepGoing)
 	{
-		if (lastY != 2 * lastX)
+		if (firstY != 2 * firstX)
 		{
 			double nextX{ getNextXForModifiedNewtonsMethod(lastX, lastY, firstX, firstY) };
 			double nextY{ getNextYForModifiedNewtonsMethod(lastX, lastY, firstX, firstY) };
@@ -227,62 +228,72 @@ void runModifiedNewtonsMethod(const double epsilon, const double delta, double l
 				firstFunctionValue <= delta && secondFunctionValue <= delta)
 			{
 				keepGoing = false;
-				std::cout << "РљРѕСЂРЅРё:\n";
+				std::cout << "Корни:\n";
 				std::cout << "x = " << lastX << '\n';
 				std::cout << "y = " << lastY << '\n';
 			}
+
+			if (lastX == +INFINITY || lastY == +INFINITY || lastX == -INFINITY && lastY == -INFINITY )
+			{
+				convergence = true;
+				keepGoing = false;
+			}
 		}
-		
 		else
 		{
-			std::cout << "РС‚РµСЂР°С†РёРѕРЅРЅС‹Р№ РїСЂРѕС†РµСЃСЃ РјРѕРґРёС„РёС†РёСЂРѕРІР°РЅРЅРѕРіРѕ РјРµС‚РѕРґР° РќСЊСЋС‚РѕРЅР° РѕРєРѕРЅС‡РµРЅ, С‚Р°Рє РєР°Рє РјР°С‚СЂРёС†Р° РЇРєРѕР±Рё РІС‹СЂРѕР¶РґРµРЅРЅР°СЏ.\n";
+			std::cout << "Итерационный процесс модифицированного метода Ньютона окончен, так как матрица Якоби вырожденная.\n";
 			keepGoing = false;
 		}
+
+	} 
+	if (convergence)
+	{
+		std::cout  << "Модифицированный метод Ньютона расходится, т.к. обратная матрица Якоби не является непрерывной и мало меняющейся " <<
+			"в области (окрестности), в которой ищем решение.\n";
 	}
-	
 }
 
 void iterative(double x, double y)
 {
-	printHeader(constants::firstEpsilon, "РњРµС‚РѕРґ РїСЂРѕСЃС‚С‹С… РёС‚РµСЂР°С†РёР№");
+	printHeader(constants::firstEpsilon, "Метод простых итераций");
 	runIterativeMethod(constants::firstEpsilon, constants::firstDelta, x, y);
 	std::cout << '\n';
-	printHeader(constants::secondEpsilon, "РњРµС‚РѕРґ РїСЂРѕСЃС‚С‹С… РёС‚РµСЂР°С†РёР№");
+	printHeader(constants::secondEpsilon, "Метод простых итераций");
 	runIterativeMethod(constants::secondEpsilon, constants::secondDelta, x, y);
 	std::wcout << '\n';
 }
 
 void newtons(double x, double y)
 {
-	printHeader(constants::firstEpsilon, "РњРµС‚РѕРґ РќСЊСЋС‚РѕРЅР°");
+	printHeader(constants::firstEpsilon, "Метод Ньютона");
 	runNewtonsMethod(constants::firstEpsilon, constants::firstDelta, x, y);
 	std::cout << '\n';
-	printHeader(constants::secondEpsilon, "РњРµС‚РѕРґ РќСЊСЋС‚РѕРЅР°");
+	printHeader(constants::secondEpsilon, "Метод Ньютона");
 	runNewtonsMethod(constants::secondEpsilon, constants::secondDelta, x, y);
 	std::cout << '\n';
 }
 
 void modifiedNewtons(double x, double y, double firstX, double firstY)
 {
-	printHeader(constants::firstEpsilon, "РњРѕРґРёС„РёС†РёСЂРѕРІР°РЅРЅС‹Р№ РјРµС‚РѕРґ РќСЊСЋС‚РѕРЅР°");
+	printHeader(constants::firstEpsilon, "Модифицированный метод Ньютона");
 	runModifiedNewtonsMethod(constants::firstEpsilon, constants::firstDelta, x, y, firstX, firstY);
 	std::cout << '\n';
-	printHeader(constants::secondEpsilon, "РњРѕРґРёС„РёС†РёСЂРѕРІР°РЅРЅС‹Р№ РјРµС‚РѕРґ РќСЊСЋС‚РѕРЅР°");
+	printHeader(constants::secondEpsilon, "Модифицированный метод Ньютона");
 	runModifiedNewtonsMethod(constants::secondEpsilon, constants::secondDelta, x, y, firstX, firstY);
 }
 
 int main()
 {
 	setlocale(LC_ALL, "russian");
-	std::cout << "13 РІР°СЂРёР°РЅС‚.\n";
+	std::cout << "13 вариант.\n";
 	std::cout << "|2x + y - 7 = 0,\n|xy - 6 = 0.\n";
 
 	double firstX{};
-	std::cout << "Р’РІРµРґРёС‚Рµ С…_0: ";
+	std::cout << "Введите х_0: ";
 	std::cin >> firstX;
 
 	double firstY{};
-	std::cout << "Р’РІРµРґРёС‚Рµ Сѓ_0: ";
+	std::cout << "Введите у_0: ";
 	std::cin >> firstY;
 
 	std::cout << '\n';
