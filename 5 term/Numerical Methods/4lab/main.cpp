@@ -47,49 +47,13 @@ double secondNewtonsInterpolationFormula(double x)
 		- 0.000000000013 * t * (t + 1) * (t + 2) * (t + 3) * (t + 4) / 120);
 }
 
-double coefficient1()
-{
-    double value{ getFunctionValue(3.125) };
-    return(value / (3.125 - 3.127) * (3.125 - 3.129) * (3.125 - 3.131) * (3.125 - 3.133) * (3.125 - 3.135));
-}
-
-double coefficient2()
-{
-    double value{ getFunctionValue(3.127) };
-    return(value / (3.127 - 3.125) * (3.127 - 3.129) * (3.127 - 3.131) * (3.127 - 3.133) * (3.127 - 3.135));
-}
-
-double coefficient3()
-{
-    double value{ getFunctionValue(3.129) };
-    return(value / (3.129 - 3.125) * (3.129 - 3.127) * (3.129 - 3.131) * (3.129 - 3.133) * (3.129 - 3.135));
-}
-
-double coefficient4()
-{
-    double value{ getFunctionValue(3.131) };
-    return(value / (3.131 - 3.125) * (3.131 - 3.127) * (3.131 - 3.129) * (3.131 - 3.133) * (3.131 - 3.135));
-}
-
-double coefficient5()
-{
-    double value{ getFunctionValue(3.133) };
-    return(value / (3.133 - 3.125) * (3.133 - 3.127) * (3.133 - 3.129) * (3.133 - 3.131) * (3.133 - 3.135));
-}
-
-double coefficient6()
-{
-    double value{ getFunctionValue(3.135) };
-    return(value / (3.135 - 3.125) * (3.135 - 3.127) * (3.135 - 3.129) * (3.135 - 3.131) * (3.135 - 3.133));
-}
-
 double lagrangeInterpolationFormula(double x)
 {
     return (-16507788010239.5833333 * (x - 3.127) * (x - 3.129) * (x - 3.131) * (x - 3.133) * (x - 3.135)
         + 82539097246725.260416666 * (x - 3.125) * (x - 3.129) * (x - 3.131) * (x - 3.133) * (x - 3.135)
         - 165079136691614.5833333 * (x - 3.125) * (x - 3.127) * (x - 3.131) * (x - 3.133) * (x - 3.135)
         + 165080706662757.8125 * (x - 3.125) * (x - 3.127) * (x - 3.129) * (x - 3.133) * (x - 3.135)
-        - 82541452188889.322916 * (x - 3.125) * (x - 3.127) * (x - 3.129) * (x - 3.131) * (x - 3.135)
+        - 82541452188889.3229166666 * (x - 3.125) * (x - 3.127) * (x - 3.129) * (x - 3.131) * (x - 3.135)
         + 16508572981262.2395833333 * (x - 3.125) * (x - 3.127) * (x - 3.129) * (x - 3.131) * (x - 3.133));
 }
 
@@ -127,7 +91,7 @@ double getClosestX0(double x)
 double getClosestXn(double x)
 {
     std::vector<double> values{ 3.125, 3.127, 3.129, 3.131, 3.133, 3.135 };
-    double x0{};
+    double xn{};
 
     for (int i{ 0 }; i < 5; ++i)
     {
@@ -135,19 +99,19 @@ double getClosestXn(double x)
         double rightDifference{ std::abs(x - values[i + 1]) };
         if (leftDifference == rightDifference)
         {
-            x0 = values[i + 1];
+            xn = values[i + 1];
             break;
         }
         else if (x >= values[i] && x <= values[i + 1])
         {
             if (leftDifference < rightDifference)
-                x0 = values[i];
+                xn = values[i];
             else
-                x0 = values[i + 1];
+                xn = values[i + 1];
         }
     }
 
-    return x0;
+    return xn;
 }
 
 double derivativeFirstNewtonsInterpolation(double x)
@@ -155,9 +119,9 @@ double derivativeFirstNewtonsInterpolation(double x)
     double x0{ getClosestX0(x) };
     double q{ (x - x0) / 0.002 };
     return (1.0 / 0.002 * (0.000120726165 + 0.00024107793 * (2 * q - 1) / 2
-        - 0.000000013106 * (3 * pow(q, 2) - 6 * q + 2) / 6 +
-        + 0.000000001931 * (4 * pow(q, 3) - 18 * pow(q, 2) + 22 * q - 6) / 24
-        - 0.000000000013 * (5 * pow(q, 4) - 40 * pow(q, 3) + 105 * pow(q, 2) - 100 * q + 24) / 120));
+        - 0.000000013106 * (3 * q * q - 6 * q + 2) / 6 +
+        + 0.000000001931 * (4 * q * q * q - 18 * q * q + 22 * q - 6) / 24
+        - 0.000000000013 * (5 * q * q * q * q - 40 * q * q * q + 105 * q * q - 100 * q + 24) / 120));
 }
 
 double derivativeSecondNewtonsInterpolation(double x)
