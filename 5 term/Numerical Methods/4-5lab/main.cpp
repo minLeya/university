@@ -91,7 +91,7 @@ double getClosestX0(double x)
 double getClosestXn(double x)
 {
     std::vector<double> values{ 3.125, 3.127, 3.129, 3.131, 3.133, 3.135 };
-    double xn{};
+    double x0{};
 
     for (int i{ 0 }; i < 5; ++i)
     {
@@ -99,27 +99,28 @@ double getClosestXn(double x)
         double rightDifference{ std::abs(x - values[i + 1]) };
         if (leftDifference == rightDifference)
         {
-            xn = values[i + 1];
+            x0 = values[i + 1];
             break;
         }
         else if (x >= values[i] && x <= values[i + 1])
         {
             if (leftDifference < rightDifference)
-                xn = values[i];
+                x0 = values[i];
             else
-                xn = values[i + 1];
+                x0 = values[i + 1];
         }
     }
 
-    return xn;
+    return x0;
 }
+
 
 double derivativeFirstNewtonsInterpolation(double x)
 {
     double x0{ getClosestX0(x) };
     double q{ (x - x0) / 0.002 };
     return (1.0 / 0.002 * (0.000120726165 + 0.00024107793 * (2 * q - 1) / 2
-        - 0.000000013106 * (3 * q * q - 6 * q + 2) / 6 +
+        - 0.000000013106 * (3 * q * q - 6 * q + 2) / 6 
         + 0.000000001931 * (4 * q * q * q - 18 * q * q + 22 * q - 6) / 24
         - 0.000000000013 * (5 * q * q * q * q - 40 * q * q * q + 105 * q * q - 100 * q + 24) / 120));
 }
@@ -179,7 +180,7 @@ int main()
         if (inputValues[i] > constants::rightEndOfRange ||
             inputValues[i] < constants::leftEndOfRange)
         {
-            std::cout << "Çíà÷åíèÿ äîëæíû ïðèíàäëåæàòü îòðåçêó [3.125; 3.135]\n";
+            std::cout << "Ð—Ð½Ð°Ñ‡ÐµÐ½Ð¸Ñ Ð´Ð¾Ð»Ð¶Ð½Ñ‹ Ð¿Ñ€Ð¸Ð½Ð°Ð´Ð»ÐµÐ¶Ð°Ñ‚ÑŒ Ð¾Ñ‚Ñ€ÐµÐ·ÐºÑƒ [3.125; 3.135]\n";
             std::cout << "x" << i << " = ";
             std::cin >> inputValues[i];
         }
