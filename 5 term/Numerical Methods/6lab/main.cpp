@@ -29,21 +29,6 @@ double trapezoidFormula4()
 		+ getFunctionValue(constants::a + 3.0 * h)));
 }
 
-
-//double trapezoidFormula4()
-//{
-//	double n{ 4.0 };
-//	double h{ (constants::b - constants::a) / n };
-//	double sum = (getFunctionValue(constants::a) + getFunctionValue(constants::b)) / 2.0;
-//
-//	for (int i = 1; i < n; ++i) {
-//		double x = constants::a + i * h;
-//		sum += getFunctionValue(x);
-//	}
-//
-//	return h * sum;
-//}
-
 double trapezoidFormula8()
 {
 	double n{ 8 };
@@ -73,20 +58,6 @@ double simpsonQuadrature8()
 			+ getFunctionValue(constants::a + 5.0 * h) + getFunctionValue(constants::a + 7.0 * h))
 		+ 2 * (getFunctionValue(constants::a + 2.0 * h) + getFunctionValue(constants::a + 4.0 * h) + getFunctionValue(constants::a + 6.0 * h))));
 }
-
-//double simpsonQuadrature8() {
-//	double n{ 8 };
-//	double h{ (constants::b - constants::a) / n };
-//	double sum = (getFunctionValue(constants::a) + getFunctionValue(constants::b));
-//
-//	for (int i = 1; i < n; ++i) {
-//		double x = constants::a + i * h;
-//		sum += (i % 2 == 0) ? 2 * getFunctionValue(x) : 4 * getFunctionValue(x);
-//	}
-//
-//	return (h / 3.0) * sum;
-//}
-
 
 double gaussianQuadrature4()
 {
@@ -144,12 +115,12 @@ int main()
 	std::cout << std::string(147, '_') << std::endl;
 	std::cout << "|" << std::setw(5) << "n"
 		"|" << std::setw(19) << "J"
-		"|" << std::setw(19) << "J_Ñ‚Ñ€ "
-		"|" << std::setw(19) << "|J - J_Ñ‚Ñ€|  "
-		"|" << std::setw(19) << "J_ÐºÐ².Ñ„.Ð¡Ð¸Ð¼Ð¿ÑÐ¾Ð½Ð°"
-		"|" << std::setw(22) << " |J - J_ÐºÐ².Ñ„.Ð¡Ð¸Ð¼Ð¿ÑÐ¾Ð½Ð°| "
-		"|" << std::setw(19) << "J_ÐºÐ².Ñ„.Ð“Ð°ÑƒÑÑÐ°"
-		"|" << std::setw(22) << " |J - J_ÐºÐ².Ñ„.Ð“Ð°ÑƒÑÑÐ°| "
+		"|" << std::setw(19) << "J_òð "
+		"|" << std::setw(19) << "|J - J_òð|  "
+		"|" << std::setw(19) << "J_êâ.ô.Ñèìïñîíà"
+		"|" << std::setw(22) << " |J - J_êâ.ô.Ñèìïñîíà| "
+		"|" << std::setw(19) << "J_êâ.ô.Ãàóññà"
+		"|" << std::setw(22) << " |J - J_êâ.ô.Ãàóññà| "
 		"|" << std::setw(18) << std::endl;
 	std::cout << std::string(147, '_') << '\n';
 
