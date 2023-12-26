@@ -21,7 +21,6 @@ long double getIntegralValue(double x)
     return (24 * x - 4 * x * x + (2 * x * x * x) / 9);
 }
 
-//Построение матрицы lambda.
 std::vector<std::vector<int>> getLambdaMatrix(const std::size_t& n, const std::size_t& m)
 {
     std::vector<std::vector<int>> matrix(2 * m + 1, std::vector<int>(2 * n + 1, 0));
@@ -71,16 +70,16 @@ std::vector<std::vector<int>> getLambdaMatrix(const std::size_t& n, const std::s
         }
     }
 
-    for (int i{}; i < 2 * m + 1; i++)
-    {
-        for (int j{}; j < 2 * n + 1; j++)
-        {
-            std::cout << matrix[i][j] << "\t";
-        }
-        std::cout << std::endl;
-    }
+    //for (int i{}; i < 2 * m + 1; i++)
+    //{
+    //    for (int j{}; j < 2 * n + 1; j++)
+    //    {
+    //        std::cout << matrix[i][j] << "\t";
+    //    }
+    //    std::cout << std::endl;
+    //}
 
-    std::cout << "\n\n\n\n";
+    //std::cout << "\n\n\n\n";
     return matrix;
 }
 
@@ -122,18 +121,19 @@ long double getYi(double b, double B, std::size_t j, std::size_t m)
 
 void printHeader()
 {
-    std::cout << std::string(94, '_') << std::endl;
+    std::cout << std::string(108, '_') << std::endl;
     std::cout << "|" << std::setw(17) << "n"
         "|" << std::setw(19) << "m"
-        "|" << std::setw(19) << "Jточн      "
-        "|" << std::setw(19) << "Jc     "
-        "|" << std::setw(19) << "|Jточн - Jc|   "
+        "|" << std::setw(24) << "Jточн      "
+        "|" << std::setw(24) << "Jc     "
+        "|" << std::setw(24) << "|Jточн - Jc|   "
         "|" << std::setw(18) << std::endl;
-    std::cout << std::string(94, '_') << '\n';
+    std::cout << std::string(108, '_') << '\n';
 }
 
 int main()
 {
+    setlocale(LC_ALL, "russian");
     for (int i{ 0 }; i < 3; ++i)
     {
         std::cout << "n = ";
@@ -169,7 +169,6 @@ int main()
 
         long double simpsonValue{ result };
 
-
         long double simpsonDifference{ std::abs(integralValue - simpsonValue) };
         printHeader();
 
@@ -180,17 +179,7 @@ int main()
             "|" << std::setw(18) << simpsonValue <<
             "|" << std::setw(18) << simpsonDifference <<
             "|" << std::setw(18) << std::endl;
-        std::cout << std::string(94, '_') << '\n';
-
-       /* std::vector<std::vector<int>> matrix{ getLambdaMatrix(2 * n, 2 * m) };
-        for (int i{ 0 }; i < 2 * m + 1; ++i)
-        {
-            for (int j{ 0 }; j < 2 * n + 1; ++j)
-            {
-                std::cout << matrix[i][j] << '\t';
-            }
-            std::cout << '\n';
-        }*/
+        std::cout << std::string(108, '_') << '\n';
     }
 
 
