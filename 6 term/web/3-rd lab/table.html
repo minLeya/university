@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+        td {
+            width: 50px;
+            height: 50px;
+        }
+        .r1 {
+            background-color: green; /* Изменение цвета для первого набора ячеек */
+        }
+        .r2 {
+            background-color: yellow; /* Изменение цвета для второго набора ячеек */
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <script>
+            var str, sel, n = 8, i, j;
+            for (i = 0; i < n; i++) {
+                document.write("<tr>");
+                for (j = 0; j < n; j++) {
+                    if (i == j || i >= j) { //находится ли ячейка на главной диагонали (i == j) или выше нее (i >= j).
+                        str = "class='r1'";
+                    } else {
+                        str = "class='r2'";
+                    }
+                    document.write("<td " + str + "></td>");
+                }
+                document.write("</tr>");
+            }
+        </script>
+    </table>
+
+    <a href="index.html">time</a>
+    <a href="firstTask.html">first task</a>
+    <a href="secondTask.html">second task</a>
+</body>
+</html>

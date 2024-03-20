@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Digit in Power</title>
+</head>
+<body>
+    <input type="number" id="numberN" placeholder="Введите n">
+    <input type="number" id="numberK" placeholder="Введите k">
+    <input type="number" id="digitM" placeholder="Введите цифру m">
+    <button onclick="checkDigitInPower()">Проверить</button>
+    <p id="result"></p>
+
+    <script>
+        function checkDigitInPower() {
+            var n = parseInt(document.getElementById("numberN").value);
+            var k = parseInt(document.getElementById("numberK").value);
+            var m = parseInt(document.getElementById("digitM").value);
+
+            var power = Math.pow(n, k); // Возведение n в степень k
+            var powerStr = power.toString(); // Преобразование результата в строку
+
+            // Проверяем, есть ли в записи числа n^k цифра m
+            var digitFound = false;
+            for (var i = 0; i < powerStr.length; i++) {
+                if (parseInt(powerStr[i]) === m) {
+                    digitFound = true;
+                    break;
+                }
+            }
+
+            // Выводим результат на страницу
+            if (digitFound) {
+                document.getElementById("result").innerText = "Цифра " + m + " найдена в записи числа " + n + "^" + k;
+            } else {
+                document.getElementById("result").innerText = "Цифра " + m + " не найдена в записи числа " + n + "^" + k;
+            }
+        }
+    </script>
+
+    <a href="index.html">time</a>
+    <a href="table.html">table</a>
+    <a href="firstTask.html">first task</a>
+   
+</body>
+</html>

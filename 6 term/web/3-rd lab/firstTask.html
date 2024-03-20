@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Replace Last Digits</title>
+</head>
+<body>
+    <input type="number" id="numberInput" placeholder="Введите натуральное число">
+    <button onclick="replaceLastDigits()">Заменить последние цифры</button>
+    <p id="result"></p>
+
+    <script>
+        function replaceLastDigits() {
+            var numberInput = document.getElementById("numberInput").value;
+            var n = parseInt(numberInput); // Преобразуем строку в целое число
+            var digits = []; // Массив для хранения цифр числа
+
+            // Получаем цифры числа N
+            while (n > 0) {
+                digits.push(n % 10); // Получаем последнюю цифру числа и добавляем её в массив
+                n = Math.floor(n / 10); // Убираем последнюю цифру числа
+            }
+
+            // Находим минимальную цифру в числе N
+            var minDigit = Math.min(...digits);
+
+            // Формируем новое число М
+            var newNumber = 0;
+            for (var i = digits.length - 1; i >= 1; i--) {
+                newNumber = newNumber * 10 + digits[i]; // Собираем число из цифр массива в обратном порядке
+            }
+            newNumber = newNumber * 10 + minDigit;
+
+            document.getElementById("result").innerText = "Новое число М: " + newNumber;
+        }
+    </script>
+
+    <a href="index.html">time</a>
+    <a href="table.html">table</a>
+    <a href="secondTask.html">second task</a>
+</body>
+</html>

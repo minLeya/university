@@ -1,1 +1,50 @@
-//
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Определение времени через минуту</title>
+</head>
+<body>
+    <h2>Введите время:</h2>
+    <label for="hours">Часы (0-23):</label>
+    <input type="number" id="hours" min="0" max="23">
+    <br>
+    <label for="minutes">Минуты (0-59):</label>
+    <input type="number" id="minutes" min="0" max="59">
+    <br>
+    <button onclick="calculateTime()">Показать время через минуту</button>
+    <p id="result"></p>
+
+    <script>
+        function calculateTime() {
+            let hoursInput = document.getElementById("hours");
+            let minutesInput = document.getElementById("minutes");
+            let resultElement = document.getElementById("result");
+
+            let hours = parseInt(hoursInput.value);
+            let minutes = parseInt(minutesInput.value);
+
+            if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+                resultElement.textContent = "Введено некорректное время.";
+            } else {
+                minutes += 1;
+
+                if (minutes === 60) {
+                    minutes = 0;
+                    hours += 1;
+                    if (hours === 24) {
+                        hours = 0;
+                    }
+                }
+
+                resultElement.textContent = `Время через минуту: ${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
+            }
+        }
+    </script>
+
+    <a href="table.html">table</a>
+    <a href="firstTask.html">first task</a>
+    <a href="secondTask.html">second task</a>
+</body>
+</html>
