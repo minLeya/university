@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document</title>
+<script>
+
+    function countConsecutiveZeros() {
+        // Получаем значение введенное пользователем
+        var N = document.getElementById("numberInput").value;
+        
+        // Преобразуем число в массив цифр для удобства работы с разрядами
+        var digits = N.toString().split('').map(Number);
+        
+        // Cчетчик нулей
+        var ZeroCount = 0;
+        var notZeroCount = 0;
+        
+        // Проходимся по массиву справа налево, начиная с младшего разряда
+        for (var i = digits.length - 1; i >= 0; i--) {
+            // Если текущая цифра - ноль, увеличиваем счетчик
+            if (digits[i] === 0) {
+                ZeroCount++;
+            } else {
+                notZeroCount++;
+            }
+        }
+        alert("Количество нулей, идущих подряд в младших разрядах: " + ZeroCount);
+    }
+
+    // Функция для вывода текущей даты и времени
+    function displayDateTime() {
+        var months = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
+        var daysOfWeek = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"];
+
+        var now = new Date();
+        var year = now.getFullYear();
+        var month = months[now.getMonth()];
+        var dayOfWeek = daysOfWeek[now.getDay()];
+        var dayOfMonth = now.getDate();
+
+        document.getElementById("dateOutput").innerHTML = year + " " + dayOfMonth + " " +  month;
+        document.getElementById("dayOfWeekOutput").innerHTML = dayOfWeek;
+    }
+
+  // Функция для расчета дней до сессии
+    function daysUntilSession() {
+        var sessionDate = new Date("June 10, 2024");
+        var currentDate = new Date();
+        var difference = Math.ceil((sessionDate - currentDate) / (1000 * 60 * 60 * 24));
+        document.getElementById("daysUntilSessionOutput").value = difference;
+    }
+
+    // Функция для расчета дней после введенной даты
+    function daysSinceDate() {
+        var inputDate = new Date(document.getElementById("inputDate").value);
+        var currentDate = new Date();
+        if (inputDate > currentDate) {
+        alert("Введите прошедшую дату!");
+        } else {
+        var difference = Math.ceil((currentDate - inputDate) / (1000 * 60 * 60 * 24));
+        document.getElementById("daysSinceDateOutput").innerHTML = "Прошло дней после введенной даты: " + difference;
+        }
+    }
+
+    // Функция для вычисления суммы числовой последовательности
+    function calculateSequenceSum() {
+        var startNumber = parseInt(document.getElementById("startNumberInput").value);
+        var numberOfTerms = parseInt(document.getElementById("numberOfTermsInput").value);
+        if (isNaN(startNumber) || isNaN(numberOfTerms) || startNumber < 0 || numberOfTerms < 0) {
+            alert("Введите корректные данные!");
+            return;
+        }
+        var sum = 0;
+        for (var i = startNumber; i < startNumber + numberOfTerms; i++) {
+            sum += Math.pow(i - 2, 2);
+        }
+        document.getElementById("sequenceSumOutput").innerHTML = "Сумма последовательности: " + sum;
+    }
+</script>
+
+</head>
+<body onload="displayDateTime()">
+  <h2>Задача 1: Определить количество нулей, идущих подряд в числе</h2>
+  <input type="number" id="numberInput" placeholder="Введите число">
+  <button onclick="countConsecutiveZeros()">Посчитать нули</button>
+
+  <h2>Текущая дата и время</h2>
+  <table border="1">
+    <tr>
+      <td id="dateOutput"></td>
+    </tr>
+    <tr>
+      <td id="dayOfWeekOutput"></td>
+    </tr>
+  </table>
+
+  <h2>Задача 2: Дни до сессии</h2>
+  <input disabled="" id="daysUntilSessionOutput">
+  <button onclick="daysUntilSession()">Посчитать</button>
+
+  <h2>Задача 3: Дни после введенной даты</h2>
+  <input type="date" id="inputDate">
+  <button onclick="daysSinceDate()">Посчитать</button>
+  <p id="daysSinceDateOutput"></p>
+
+  <h2>Задача 4: Сумма числовой последовательности</h2>
+  <input type="number" id="startNumberInput" placeholder="Начальное число">
+  <input type="number" id="numberOfTermsInput" placeholder="Количество членов">
+  <button onclick="calculateSequenceSum()">Посчитать</button>
+  <p id="sequenceSumOutput"></p>
+</body>
+</html>
