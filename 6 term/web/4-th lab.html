@@ -7,29 +7,24 @@
 <script>
 
     function countConsecutiveZeros() {
-        // Получаем значение введенное пользователем
         var N = document.getElementById("numberInput").value;
-        
         // Преобразуем число в массив цифр для удобства работы с разрядами
         var digits = N.toString().split('').map(Number);
-        
-        // Cчетчик нулей
+
         var ZeroCount = 0;
         var notZeroCount = 0;
-        
-        // Проходимся по массиву справа налево, начиная с младшего разряда
+
         for (var i = digits.length - 1; i >= 0; i--) {
-            // Если текущая цифра - ноль, увеличиваем счетчик
             if (digits[i] === 0) {
                 ZeroCount++;
             } else {
                 notZeroCount++;
             }
         }
+    
         alert("Количество нулей, идущих подряд в младших разрядах: " + ZeroCount);
     }
 
-    // Функция для вывода текущей даты и времени
     function displayDateTime() {
         var months = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
         var daysOfWeek = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"];
@@ -44,45 +39,61 @@
         document.getElementById("dayOfWeekOutput").innerHTML = dayOfWeek;
     }
 
-  // Функция для расчета дней до сессии
     function daysUntilSession() {
         var sessionDate = new Date("June 10, 2024");
         var currentDate = new Date();
         var difference = Math.ceil((sessionDate - currentDate) / (1000 * 60 * 60 * 24));
         document.getElementById("daysUntilSessionOutput").value = difference;
     }
-
-    // Функция для расчета дней после введенной даты
-    function daysSinceDate() {
-        var inputDate = new Date(document.getElementById("inputDate").value);
-        var currentDate = new Date();
-        if (inputDate > currentDate) {
-        alert("Введите прошедшую дату!");
-        } else {
-        var difference = Math.ceil((currentDate - inputDate) / (1000 * 60 * 60 * 24));
-        document.getElementById("daysSinceDateOutput").innerHTML = "Прошло дней после введенной даты: " + difference;
-        }
+ 
+    function requestDate() {
+      var inputDate = prompt("Введите дату в формате дд.мм.гггг:");
+      if (inputDate === null || inputDate === "") {
+        alert("Пожалуйста, введите корректную дату!");
+        return;
+      }
+      document.getElementById("inputDate").value = inputDate;
     }
 
-    // Функция для вычисления суммы числовой последовательности
+    function daysSinceDate() {
+      var inputDateStr = document.getElementById("inputDate").value;
+      var inputDateParts = inputDateStr.split(".");
+      var inputDate = new Date(inputDateParts[2], inputDateParts[1] - 1, inputDateParts[0]);
+      var currentDate = new Date();
+
+      if (isNaN(inputDate.getTime()) || inputDate > currentDate) {
+        alert("Введите прошедшую дату!");
+        return;
+      }
+
+      var difference = Math.ceil((currentDate - inputDate) / (1000 * 60 * 60 * 24));
+      document.getElementById("daysSinceDateOutput").textContent = "Прошло дней после введенной даты: " + difference;
+    }
+
     function calculateSequenceSum() {
-        var startNumber = parseInt(document.getElementById("startNumberInput").value);
-        var numberOfTerms = parseInt(document.getElementById("numberOfTermsInput").value);
+        var sequenceInput = document.getElementById("sequenceInput").value;
+        var sequenceParams = sequenceInput.split(',');
+        
+        var startNumber = parseInt(sequenceParams[0]);
+        var numberOfTerms = parseInt(sequenceParams[1]);
+
         if (isNaN(startNumber) || isNaN(numberOfTerms) || startNumber < 0 || numberOfTerms < 0) {
             alert("Введите корректные данные!");
             return;
         }
+
         var sum = 0;
         for (var i = startNumber; i < startNumber + numberOfTerms; i++) {
             sum += Math.pow(i - 2, 2);
         }
+
         document.getElementById("sequenceSumOutput").innerHTML = "Сумма последовательности: " + sum;
     }
 </script>
 
 </head>
 <body onload="displayDateTime()">
-  <h2>Задача 1: Определить количество нулей, идущих подряд в числе</h2>
+  <h2>Определить количество нулей, идущих подряд в числе</h2>
   <input type="number" id="numberInput" placeholder="Введите число">
   <button onclick="countConsecutiveZeros()">Посчитать нули</button>
 
@@ -96,18 +107,25 @@
     </tr>
   </table>
 
-  <h2>Задача 2: Дни до сессии</h2>
+  <h2>Дни до сессии</h2>
   <input disabled="" id="daysUntilSessionOutput">
   <button onclick="daysUntilSession()">Посчитать</button>
 
-  <h2>Задача 3: Дни после введенной даты</h2>
-  <input type="date" id="inputDate">
-  <button onclick="daysSinceDate()">Посчитать</button>
-  <p id="daysSinceDateOutput"></p>
 
-  <h2>Задача 4: Сумма числовой последовательности</h2>
-  <input type="number" id="startNumberInput" placeholder="Начальное число">
-  <input type="number" id="numberOfTermsInput" placeholder="Количество членов">
+  <h2>Дни после введенной даты</h2>
+  <button onclick="requestDate()">Ввести дату</button>
+
+  <div style="margin-top: 5px;">
+    <input type="text" id="inputDate" readonly>
+    <button onclick="daysSinceDate()">Посчитать</button>
+  </div>
+  <div style="margin-top: 5px;">
+    <p id="daysSinceDateOutput"></p>
+  </div>
+
+
+  <h2>Сумма числовой последовательности</h2>
+  <input type="text" id="sequenceInput" placeholder="Начальное число, Количество членов">
   <button onclick="calculateSequenceSum()">Посчитать</button>
   <p id="sequenceSumOutput"></p>
 </body>
