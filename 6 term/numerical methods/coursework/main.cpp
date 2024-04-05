@@ -37,51 +37,57 @@ double simpsonQuadrature()
 	double h{ (constants::b - constants::a) / n };
 	return (h / 3.0 * (getFunctionValue(constants::a) + getFunctionValue(constants::b)
 		+ 4 * (getFunctionValue(constants::a + h) + getFunctionValue(constants::a + 3.0 * h)
-			+ getFunctionValue(constants::a + 5.0 * h) + getFunctionValue(constants::a + 7.0 * h) 
+			+ getFunctionValue(constants::a + 5.0 * h) + getFunctionValue(constants::a + 7.0 * h)
 			+ getFunctionValue(constants::a + 9.0 * h))
 		+ 2 * (getFunctionValue(constants::a + 2.0 * h) + getFunctionValue(constants::a + 4.0 * h)
 			+ getFunctionValue(constants::a + 6.0 * h) + getFunctionValue(constants::a + 8.0 * h))));
 }
 
-double NewtonCotes3() {
-	double n{ 3 };
-	double h{ (constants::b - constants::a) / n };
-	return (3.0 * h / 8.0 * (getFunctionValue(constants::a) + 3 * getFunctionValue(constants::a + h)
-		+ 3 * getFunctionValue(constants::a + 2.0 * h) + getFunctionValue(constants::a + 3.0 * h)));
-}
-
-
-double NewtonCotes4()
+double NewtonCotes3(int n)
 {
-	double n{ 4 };
 	double h{ (constants::b - constants::a) / n };
-	return (4.0 * h / 90.0 * (7 * getFunctionValue(constants::a) + 32 * getFunctionValue(constants::a + h)
-		+ 12 * getFunctionValue(constants::a + 2.0 * h) + 32 * getFunctionValue(constants::a + 3.0 * h)
-		+ 7 * getFunctionValue(constants::b)));
+	double NewtonCotes3Sum{ getFunctionValue(constants::a) + getFunctionValue(constants::b) };
+
+	for (int m{ 1 }; 3 * m <= n; m++) {
+		if (m != 1)
+		{
+			NewtonCotes3Sum += 2 * getFunctionValue(constants::a + (3 * m - 3) * h);
+		}
+		NewtonCotes3Sum += 3 * getFunctionValue(constants::a + (3 * m - 2) * h);
+		NewtonCotes3Sum += 3 * getFunctionValue(constants::a + (3 * m - 1) * h);
+	}
+	return (3.0 * h / 8.0 * NewtonCotes3Sum);
+	/*return (3.0 * h / 8.0 * (getFunctionValue(constants::a) + getFunctionValue(constants::b)
+		+ 2 * (getFunctionValue(constants::a + 3.0 * h) + getFunctionValue(constants::a + 6.0 * h) + getFunctionValue(constants::a + 9.0 * h))
+		+ 3 * (getFunctionValue(constants::a + h) + getFunctionValue(constants::a + 2.0 * h) + getFunctionValue(constants::a + 4.0 * h) 
+			+ getFunctionValue(constants::a + 5.0 * h) + getFunctionValue(constants::a + 7.0 * h) 
+			+ getFunctionValue(constants::a + 8.0 * h) + getFunctionValue(constants::a + 10.0 * h)
+			+ getFunctionValue(constants::a + 11.0 * h))));*/
 }
 
-double NewtonCotes5()
+
+double NewtonCotes4(int n)
 {
-	double n{ 5 };
 	double h{ (constants::b - constants::a) / n };
-	return (5.0 * h / 288.0 * (19 * getFunctionValue(constants::a) + 75 * getFunctionValue(constants::a + h)
-		+ 50 * getFunctionValue(constants::a + 2.0 * h) + 50 * getFunctionValue(constants::a + 3.0 * h)
-		+ 75 * getFunctionValue(constants::a + 4.0 * h) + 19 * getFunctionValue(constants::b)));
+	return (4.0 * h / 90.0 * (7 * (getFunctionValue(constants::a) + getFunctionValue(constants::b))
+		+ 32 * (getFunctionValue(constants::a + h) + getFunctionValue(constants::a + 3.0 * h) 
+			+ getFunctionValue(constants::a + 5.0 * h) + getFunctionValue(constants::a + 7.0 * h)
+			+ getFunctionValue(constants::a + 9.0 * h) + getFunctionValue(constants::a + 11.0 * h))
+		+ 12 * (getFunctionValue(constants::a + 2.0 * h) + getFunctionValue(constants::a + 6.0 * h) + getFunctionValue(constants::a + 10.0 * h)) 
+		+ 14 * (getFunctionValue(constants::a + 4.0 * h) + getFunctionValue(constants::a + 8.0 * h))));
 }
 
-double NewtonCotes1()
+double NewtonCotes5(int n)
 {
-	double n{ 1 };
 	double h{ (constants::b - constants::a) / n };
-	return (h / 2.0 * (getFunctionValue(constants::a) + getFunctionValue(constants::b)));
+	return (5.0 * h / 288.0 * (19 * (getFunctionValue(constants::a) + getFunctionValue(constants::b))
+		+ 75 * (getFunctionValue(constants::a + h) + getFunctionValue(constants::a + 4.0 * h) 
+			+ getFunctionValue(constants::a + 6.0 * h) + getFunctionValue(constants::a + 9.0 * h))
+		+ 50 * (getFunctionValue(constants::a + 2.0 * h) + getFunctionValue(constants::a + 3.0 * h)
+			+ getFunctionValue(constants::a + 7.0 * h) + getFunctionValue(constants::a + 8.0 * h))
+		+ 38 * getFunctionValue(constants::a + 5.0 * h)));
 }
 
-double NewtonCotes2()
-{
-	double n{ 2 };
-	double h{ (constants::b - constants::a) / n };
-	return (2 * h / 6.0 * (getFunctionValue(constants::a) + 4 * getFunctionValue(constants::a + h) + getFunctionValue(constants::b)));
-}
 
 int main()
 {
@@ -92,32 +98,33 @@ int main()
 
 	double trapezoidFormulaSolution{ trapezoidFormula() };
 	double trapezoidDifference{ std::abs(exactSolution - trapezoidFormulaSolution) };
-	
+
 	double simpsonQuadratureSolution{ simpsonQuadrature() };
 	double simpsonDifference{ std::abs(exactSolution - simpsonQuadratureSolution) };
 
-	double NewtonCotes1Solution{ NewtonCotes1() };
-	double NewtonCotes1Difference{ std::abs(exactSolution - NewtonCotes1Solution) };
-
-	double NewtonCotes2Solution{ NewtonCotes2() };
-	double NewtonCotes2Difference{ std::abs(exactSolution - NewtonCotes2Solution) };
-
-	double NewtonCotes3Solution{ NewtonCotes3() };
+	int n_3{ 12 };
+	double NewtonCotes3Solution{ NewtonCotes3(n_3) };
 	double NewtonCotes3Difference{ std::abs(exactSolution - NewtonCotes3Solution) };
-	
-	double NewtonCotes4Solution{ NewtonCotes4() };
+	double h_3{ (constants::b - constants::a) / n_3 };
+
+	int n_4{ 12 };
+	double NewtonCotes4Solution{ NewtonCotes4(n_4) };
 	double NewtonCotes4Difference{ std::abs(exactSolution - NewtonCotes4Solution) };
+	double h_4{ (constants::b - constants::a) / n_4 };
 
-	double NewtonCotes5Solution{ NewtonCotes5() };
+	int n_5{ 10 };
+	double NewtonCotes5Solution{ NewtonCotes5(n_5) };
 	double NewtonCotes5Difference{ std::abs(exactSolution - NewtonCotes5Solution) };
+	double h_5{ (constants::b - constants::a) / n_5 };
 
 
+	std::cout << "n = 10:\n";
 	std::cout << std::string(101, '_') << std::endl;
-		std::cout << "|" << std::setw(19) << "J"
-		"|" << std::setw(19) << "J(òð) "
-		"|" << std::setw(19) << "|J - J(òð)|  "
-		"|" << std::setw(19) << "J(êâ.ô.Ñèìïñîíà)"
-		"|" << std::setw(22) << " |J - J(êâ.ô.Ñèìïñîíà)| "
+	std::cout << "|" << std::setw(19) << "J"
+		"|" << std::setw(19) << "J(Ñ‚Ñ€) "
+		"|" << std::setw(19) << "|J - J(Ñ‚Ñ€)|  "
+		"|" << std::setw(19) << "J(ÐºÐ².Ñ„.Ð¡Ð¸Ð¼Ð¿ÑÐ¾Ð½Ð°)"
+		"|" << std::setw(22) << " |J - J(ÐºÐ².Ñ„.Ð¡Ð¸Ð¼Ð¿ÑÐ¾Ð½Ð°)| "
 		"|" << std::setw(18) << std::endl;
 	std::cout << std::string(101, '_') << '\n';
 
@@ -131,36 +138,41 @@ int main()
 	std::cout << std::string(101, '_') << "\n\n";
 
 
+	std::cout << "n = 12:\n";
+	std::cout << std::string(97, '_') << std::endl;
+	std::cout << "|" << std::setw(19) << "J"
+		"|" << std::setw(19) << "J_3 "
+		"|" << std::setw(19) << "|J - J_3|  "
+		"|" << std::setw(19) << "J_4"
+		"|" << std::setw(20) << "|J - J_4|   "
+		"|" << std::setw(18) << std::endl;
+	std::cout << std::string(97, '_') << '\n';
 
-	std::cout << std::string(198, '_') << std::endl;
-		std::cout << "|" << std::setw(18) << "J      "
-		"|" << std::setw(18) << "J_1    "
-		"|" << std::setw(18) << " |J - J_1|  "
-		"|" << std::setw(18) << "J_2      "
-		"|" << std::setw(18) << " |J - J_2|  "
-		"|" << std::setw(18) << "J_3      "
-		"|" << std::setw(18) << " |J - J_3|    "
-		"|" << std::setw(18) << "J_4     "
-		"|" << std::setw(18) << " |J - J_4|   "
-		"|" << std::setw(18) << " J_5      "
-		"|" << std::setw(18) << " |J - J_5|    "
+	std::cout <<
+		"|" << std::setw(18) << exactSolution <<
+		"|" << std::setw(18) << NewtonCotes3Solution <<
+		"|" << std::setw(18) << NewtonCotes3Difference <<
+		"|" << std::setw(18) << NewtonCotes4Solution <<
+		"|" << std::setw(19) << NewtonCotes4Difference <<
+		"|" << std::setw(18) << std::endl;
+	std::cout << std::string(97, '_') << "\n\n";
+
+
+	std::cout << "n = 10:\n";
+	std::cout << std::string(54, '_') << std::endl;
+	std::cout << "|" << std::setw(18) << "J      "
+		"|" << std::setw(18) << "J_5     "
+		"|" << std::setw(18) << " |J - J_5|   "
 		"|" << std::setw(17) << std::endl;
-	std::cout << std::string(198, '_') << '\n';
+	std::cout << std::string(54, '_') << '\n';
 
-	std::cout << 
+
+	std::cout <<
 		"|" << std::setw(17) << exactSolution <<
-		"|" << std::setw(17) << NewtonCotes1Solution <<
-		"|" << std::setw(17) << NewtonCotes1Difference <<
-		"|" << std::setw(17) << NewtonCotes2Solution <<
-		"|" << std::setw(17) << NewtonCotes2Difference <<
-		"|" << std::setw(17) << NewtonCotes3Solution <<
-		"|" << std::setw(17) << NewtonCotes3Difference <<
-		"|" << std::setw(17) << NewtonCotes4Solution <<
-		"|" << std::setw(17) << NewtonCotes4Difference <<
 		"|" << std::setw(17) << NewtonCotes5Solution <<
 		"|" << std::setw(17) << NewtonCotes5Difference <<
 		"|" << std::setw(17) << std::endl;
-	std::cout << std::string(198, '_') << '\n';
+	std::cout << std::string(54, '_') << '\n';
 
 	return 0;
 }
