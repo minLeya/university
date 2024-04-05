@@ -19,28 +19,28 @@ double getIntegralValue(double x)
 	return (x * x * atan(x) / 2 - 0.5 * x + 0.5 * atan(x));
 }
 
-double trapezoidFormula()
+double trapezoidFormula(int n)
 {
-	double n{ 10 };
 	double h{ (constants::b - constants::a) / n };
-	return (h * ((getFunctionValue(constants::a) + getFunctionValue(constants::b)) / 2
-		+ getFunctionValue(constants::a + h) + getFunctionValue(constants::a + 2.0 * h)
-		+ getFunctionValue(constants::a + 3.0 * h) + getFunctionValue(constants::a + 4.0 * h)
-		+ getFunctionValue(constants::a + 5.0 * h) + getFunctionValue(constants::a + 6.0 * h)
-		+ getFunctionValue(constants::a + 7.0 * h) + getFunctionValue(constants::a + 8.0 * h)
-		+ getFunctionValue(constants::a + 9.0 * h)));
+	double trapezoidFormulaSum{ getFunctionValue(constants::a) + getFunctionValue(constants::b) };
+
+	for (int m{ 2 }; m <= n; m++) {
+		trapezoidFormulaSum += 2 * getFunctionValue(constants::a + (m - 1) * h);	}
+	return (h / 2.0 * trapezoidFormulaSum);
 }
 
-double simpsonQuadrature()
+double simpsonQuadrature(int n)
 {
-	double n{ 10 };
 	double h{ (constants::b - constants::a) / n };
-	return (h / 3.0 * (getFunctionValue(constants::a) + getFunctionValue(constants::b)
-		+ 4 * (getFunctionValue(constants::a + h) + getFunctionValue(constants::a + 3.0 * h)
-			+ getFunctionValue(constants::a + 5.0 * h) + getFunctionValue(constants::a + 7.0 * h)
-			+ getFunctionValue(constants::a + 9.0 * h))
-		+ 2 * (getFunctionValue(constants::a + 2.0 * h) + getFunctionValue(constants::a + 4.0 * h)
-			+ getFunctionValue(constants::a + 6.0 * h) + getFunctionValue(constants::a + 8.0 * h))));
+	double simpsonQuadratureSum{ getFunctionValue(constants::a) + getFunctionValue(constants::b) };
+
+	for (int m{ 1 }; 2 * m <= n; m++) {
+		if (m != 1) {
+			simpsonQuadratureSum += 2 * getFunctionValue(constants::a + (2 * m - 2) * h);
+		}
+		simpsonQuadratureSum += 4 * getFunctionValue(constants::a + (2 * m - 1) * h);
+	}
+	return (h / 3.0 * simpsonQuadratureSum);
 }
 
 double NewtonCotes3(int n)
@@ -57,68 +57,72 @@ double NewtonCotes3(int n)
 		NewtonCotes3Sum += 3 * getFunctionValue(constants::a + (3 * m - 1) * h);
 	}
 	return (3.0 * h / 8.0 * NewtonCotes3Sum);
-	/*return (3.0 * h / 8.0 * (getFunctionValue(constants::a) + getFunctionValue(constants::b)
-		+ 2 * (getFunctionValue(constants::a + 3.0 * h) + getFunctionValue(constants::a + 6.0 * h) + getFunctionValue(constants::a + 9.0 * h))
-		+ 3 * (getFunctionValue(constants::a + h) + getFunctionValue(constants::a + 2.0 * h) + getFunctionValue(constants::a + 4.0 * h) 
-			+ getFunctionValue(constants::a + 5.0 * h) + getFunctionValue(constants::a + 7.0 * h) 
-			+ getFunctionValue(constants::a + 8.0 * h) + getFunctionValue(constants::a + 10.0 * h)
-			+ getFunctionValue(constants::a + 11.0 * h))));*/
 }
 
 
 double NewtonCotes4(int n)
 {
 	double h{ (constants::b - constants::a) / n };
-	return (4.0 * h / 90.0 * (7 * (getFunctionValue(constants::a) + getFunctionValue(constants::b))
-		+ 32 * (getFunctionValue(constants::a + h) + getFunctionValue(constants::a + 3.0 * h) 
-			+ getFunctionValue(constants::a + 5.0 * h) + getFunctionValue(constants::a + 7.0 * h)
-			+ getFunctionValue(constants::a + 9.0 * h) + getFunctionValue(constants::a + 11.0 * h))
-		+ 12 * (getFunctionValue(constants::a + 2.0 * h) + getFunctionValue(constants::a + 6.0 * h) + getFunctionValue(constants::a + 10.0 * h)) 
-		+ 14 * (getFunctionValue(constants::a + 4.0 * h) + getFunctionValue(constants::a + 8.0 * h))));
+	double NewtonCotes4Sum{ 7 * (getFunctionValue(constants::a) + getFunctionValue(constants::b)) };
+
+	for (int m{ 1 }; 4 * m <= n; m++) {
+		if (m != 1)
+		{
+			NewtonCotes4Sum += 2 * 7 * getFunctionValue(constants::a + (4 * m - 4) * h);
+		}
+
+		NewtonCotes4Sum += 32 * getFunctionValue(constants::a + (4 * m - 3) * h);
+		NewtonCotes4Sum += 12 * getFunctionValue(constants::a + (4 * m - 2) * h);
+		NewtonCotes4Sum += 32 * getFunctionValue(constants::a + (4 * m - 1) * h);
+	}
+	return (4.0 * h / 90.0 * NewtonCotes4Sum);
 }
 
 double NewtonCotes5(int n)
 {
 	double h{ (constants::b - constants::a) / n };
-	return (5.0 * h / 288.0 * (19 * (getFunctionValue(constants::a) + getFunctionValue(constants::b))
-		+ 75 * (getFunctionValue(constants::a + h) + getFunctionValue(constants::a + 4.0 * h) 
-			+ getFunctionValue(constants::a + 6.0 * h) + getFunctionValue(constants::a + 9.0 * h))
-		+ 50 * (getFunctionValue(constants::a + 2.0 * h) + getFunctionValue(constants::a + 3.0 * h)
-			+ getFunctionValue(constants::a + 7.0 * h) + getFunctionValue(constants::a + 8.0 * h))
-		+ 38 * getFunctionValue(constants::a + 5.0 * h)));
+
+	double NewtonCotes5Sum{ 19 * (getFunctionValue(constants::a) + getFunctionValue(constants::b)) };
+
+	for (int m{ 1 }; 5 * m <= n; m++) {
+		if (m != 1)
+		{
+			NewtonCotes5Sum += 2 * 19 * getFunctionValue(constants::a + (5 * m - 5) * h);
+		}
+
+		NewtonCotes5Sum += 75 * getFunctionValue(constants::a + (5 * m - 4) * h);
+		NewtonCotes5Sum += 50 * getFunctionValue(constants::a + (5 * m - 3) * h);
+		NewtonCotes5Sum += 50 * getFunctionValue(constants::a + (5 * m - 2) * h);
+		NewtonCotes5Sum += 75 * getFunctionValue(constants::a + (5 * m - 1) * h);
+	}
+	return (5.0 * h / 288.0 * NewtonCotes5Sum);
 }
 
 
 int main()
 {
 	setlocale(LC_ALL, "russian");
-	std::cout << std::setprecision(13) << std::fixed;
+	std::cout << std::setprecision(15) << std::fixed;
 
 	double exactSolution{ getIntegralValue(constants::b) - getIntegralValue(constants::a) };
 
-	double trapezoidFormulaSolution{ trapezoidFormula() };
+	int n{ 60 };
+
+	double trapezoidFormulaSolution{ trapezoidFormula(n) };
 	double trapezoidDifference{ std::abs(exactSolution - trapezoidFormulaSolution) };
 
-	double simpsonQuadratureSolution{ simpsonQuadrature() };
+	double simpsonQuadratureSolution{ simpsonQuadrature(n) };
 	double simpsonDifference{ std::abs(exactSolution - simpsonQuadratureSolution) };
 
-	int n_3{ 12 };
-	double NewtonCotes3Solution{ NewtonCotes3(n_3) };
+	double NewtonCotes3Solution{ NewtonCotes3(n) };
 	double NewtonCotes3Difference{ std::abs(exactSolution - NewtonCotes3Solution) };
-	double h_3{ (constants::b - constants::a) / n_3 };
 
-	int n_4{ 12 };
-	double NewtonCotes4Solution{ NewtonCotes4(n_4) };
+	double NewtonCotes4Solution{ NewtonCotes4(n) };
 	double NewtonCotes4Difference{ std::abs(exactSolution - NewtonCotes4Solution) };
-	double h_4{ (constants::b - constants::a) / n_4 };
 
-	int n_5{ 10 };
-	double NewtonCotes5Solution{ NewtonCotes5(n_5) };
+	double NewtonCotes5Solution{ NewtonCotes5(n) };
 	double NewtonCotes5Difference{ std::abs(exactSolution - NewtonCotes5Solution) };
-	double h_5{ (constants::b - constants::a) / n_5 };
 
-
-	std::cout << "n = 10:\n";
 	std::cout << std::string(101, '_') << std::endl;
 	std::cout << "|" << std::setw(19) << "J"
 		"|" << std::setw(19) << "J(тр) "
@@ -138,7 +142,6 @@ int main()
 	std::cout << std::string(101, '_') << "\n\n";
 
 
-	std::cout << "n = 12:\n";
 	std::cout << std::string(97, '_') << std::endl;
 	std::cout << "|" << std::setw(19) << "J"
 		"|" << std::setw(19) << "J_3 "
@@ -158,7 +161,6 @@ int main()
 	std::cout << std::string(97, '_') << "\n\n";
 
 
-	std::cout << "n = 10:\n";
 	std::cout << std::string(54, '_') << std::endl;
 	std::cout << "|" << std::setw(18) << "J      "
 		"|" << std::setw(18) << "J_5     "
