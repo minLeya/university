@@ -1,0 +1,127 @@
+Client is running...
+Client is running...
+Client is running...
+Client is running...
+Client is running...
+Client connected to server: localhost:2500
+Writing string to server: 3.7+
+Writing string to server: 1.6-
+Writing string to server: 4-
+Writing string to server: 5=
+Finished writing expression to server
+Result returned from server: -3.6999999999999993
+
+Client is running...
+Client connected to server: 192.168.138.188:2500
+Writing string to server: 3.7+
+Writing string to server: 1.6-
+Writing string to server: 4-
+Writing string to server: 5=
+Finished writing expression to server
+Result returned from server: -3.6999999999999993
+
+Client is running...
+Client connected to server: 192.168.138.188:2500
+Writing string to server: 3.7+
+Writing string to server: 1.6-
+Writing string to server: 4-
+Writing string to server: 5=
+Finished writing expression to server
+Result returned from server: -3.6999999999999993
+
+Client is running...
+Client connected to server: 192.168.138.188:2500
+Writing string to server: 3.7+
+Writing string to server: 1.6-
+Writing string to server: 4-
+Writing string to server: 5=
+Finished writing expression to server
+Result returned from server: -3.6999999999999993
+
+Client is running...
+Client connected to server: 192.168.138.188:2500
+Writing string to server: 4.7+
+Writing string to server: 8.6-
+Writing string to server: 4-
+Writing string to server: 5=
+Finished writing expression to server
+Result returned from server: 4.300000000000001
+
+Client is running...
+Client connected to server: 192.168.138.188:2500
+Writing string to server: 4.7+
+Writing string to server: 8.6-
+Writing string to server: 4-
+Writing string to server: 5=
+Finished writing expression to server
+Result returned from server: 4.300000000000001
+
+Client is running...
+Client is running...
+Client connected to server: 192.168.138.188:2500
+Writing string to server: 4.7+
+Writing string to server: 8.6-
+Writing string to server: 4-
+Writing string to server: 5=
+Finished writing expression to server
+Result returned from server: 4.300000000000001
+
+Client is running...
+Client connected to server: 192.168.138.188:2500
+Client is running...
+Client connected to server: 192.168.138.188:2500
+Writing string to server: 4.1-
+Writing string to server: 5-
+Writing string to server: 3.1+
+Writing string to server: 8.1*
+Writing string to server: 7=
+Finished writing expression to server
+Result returned from server: -2.9000000000000004
+
+Writing string to server: 5=
+Finished writing expression to server
+Result returned from server: NumberFormatException: For input string: "8.1*5"
+
+Client is running...
+Client connected to server: 192.168.138.188:2500
+Client is running...
+Client connected to server: 192.168.138.188:2500
+Client is running...
+Client connected to server: 192.168.138.188:2500
+Client is running...
+Client connected to server: 192.168.138.188:2500
+Client is running...
+Client connected to server: 192.168.138.188:2500
+Client is running...
+Client connected to server: 192.168.138.188:2500
+Writing string to server: 5-
+Writing string to server: 1.3+
+Writing string to server: 5.3-
+Writing string to server: 4.1+
+Writing string to server: 2.1-
+Writing string to server: 1.4=
+Finished writing expression to server
+Result returned from server: null
+
+Writing string to server: 400=
+Finished writing expression to server
+Result returned from server: null
+
+Client is running...
+Client connected to server: 192.168.138.188:2500
+Client is running...
+Client connected to server: 192.168.138.188:2500
+Writing string to server: 1+
+Writing string to server: 2+
+Writing string to server: 2+
+Writing string to server: 1+
+Writing string to server: 1+
+Writing string to server: 1=
+Finished writing expression to server
+Result returned from server: 4.0
+
+Writing string to server: 2+
+Writing string to server: 2=
+Finished writing expression to server
+Result returned from server: 8.0
+

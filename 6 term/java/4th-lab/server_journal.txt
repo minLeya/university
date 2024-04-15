@@ -1,0 +1,9 @@
+Server is running...
+Listener is running...
+Read string from client: 3.7+
+Read string from client: 1.6-
+Read string from client: 4-
+Read string from client: 5=
+Expression read from client: 3.7+1.6-4-5=
+Result sent to client: -3.6999999999999993
+
