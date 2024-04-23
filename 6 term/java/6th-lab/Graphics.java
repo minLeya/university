@@ -16,11 +16,13 @@ class Figures extends Frame implements Observer, ActionListener, ItemListener {
 
     private LinkedList<Figure> LL = new LinkedList<>();
     private Color color;
+
     private Frame mainWindow;
     private Button button;
     private Choice colorChoice;
     private Choice figureChoice;
-    private Choice fillChoice;
+    private Choice speedChoice;
+
     private TextField tf;
 
     Figures() {
@@ -30,13 +32,16 @@ class Figures extends Frame implements Observer, ActionListener, ItemListener {
         mainWindow.setTitle("Контроль");
         mainWindow.setLayout(new GridLayout());
         mainWindow.addWindowListener(new WindowAdapter2());
-        
+
         button = new Button("Пуск");
         button.setSize(new Dimension(10, 40));
         button.setActionCommand("OK");
         button.addActionListener(this);
         mainWindow.add(button, new Point(20, 20));
-        
+
+        Panel colorPanel = new Panel(new GridLayout(2, 1));
+        Label colorLabel = new Label("Выбор заливки:");
+        colorPanel.add(colorLabel);
         colorChoice = new Choice();
         colorChoice.addItem("Синий");
         colorChoice.addItem("Зелёный");
@@ -44,8 +49,12 @@ class Figures extends Frame implements Observer, ActionListener, ItemListener {
         colorChoice.addItem("Чёрный");
         colorChoice.addItem("Жёлтый");
         colorChoice.addItemListener(this);
-        mainWindow.add(colorChoice, new Point(60, 20));
+        colorPanel.add(colorChoice);
+        mainWindow.add(colorPanel);
 
+        Panel figureChoicePanel = new Panel(new GridLayout(2, 1));
+        Label figureChoiceLabel = new Label("Выбор фигуры: ");
+        figureChoicePanel.add(figureChoiceLabel);
         figureChoice = new Choice();
         figureChoice.addItem("Круг");
         figureChoice.addItem("Овал");
@@ -53,15 +62,20 @@ class Figures extends Frame implements Observer, ActionListener, ItemListener {
         figureChoice.addItem("Квадрат");
         figureChoice.addItem("Прямоугольник");
         figureChoice.addItemListener(this);
-        mainWindow.add(figureChoice, new Point(60, 20));
+        figureChoicePanel.add(figureChoice);
+        mainWindow.add(figureChoicePanel);
 
-        fillChoice = new Choice();
-        fillChoice.addItem("Синий");
-        fillChoice.addItem("Зелёный");
-        fillChoice.addItem("Красный");
-        fillChoice.addItem("Чёрный");
-        fillChoice.addItem("Жёлтый");
-        mainWindow.add(fillChoice, new Point(60, 40));
+        Panel speedChoicePanel = new Panel(new GridLayout(2, 1));
+        Label speedChoiceLabel = new Label("Скорость: ");
+        speedChoicePanel.add(speedChoiceLabel);
+        speedChoice = new Choice();
+        speedChoice.addItem("Очень медленно");
+        speedChoice.addItem("Медленно");
+        speedChoice.addItem("Средне");
+        speedChoice.addItem("Быстро");
+        speedChoice.addItem("Очень быстро");
+        speedChoicePanel.add(speedChoice);
+        mainWindow.add(speedChoicePanel);
 
         tf = new TextField();
         mainWindow.add(tf);
@@ -73,7 +87,7 @@ class Figures extends Frame implements Observer, ActionListener, ItemListener {
 
     public void update(Observable o, Object arg) {
         Figure figure = (Figure) arg;
-        System.out.println("x= " + figure.thr.getName() + figure.x);
+        System.out.println("x= " + figure.thread.getName() + figure.x);
         repaint();
     }
 
@@ -84,20 +98,25 @@ class Figures extends Frame implements Observer, ActionListener, ItemListener {
                 g.setColor(figure.color);
                 if (figure.name.equals("Круг")) {
                     g.drawOval(figure.x, figure.y, 20, 20);
+                    g.fillOval(figure.x, figure.y, 20, 20);
                 }
                 else if (figure.name.equals("Овал")) {
                     g.drawOval(figure.x, figure.y, 30, 20);
+                    g.fillOval(figure.x, figure.y, 30, 20);
                 }
                 else if (figure.name.equals("Треугольник")) {
                     int[] xPoints = {figure.x + 10, figure.x + 20, figure.x};
                     int[] yPoints = {figure.y, figure.y + 20, figure.y + 20};
                     g.drawPolygon(xPoints, yPoints, 3);
+                    g.fillPolygon(xPoints, yPoints, 3);
                 }
                 else if (figure.name.equals("Прямоугольник")) {
                     g.drawRect(figure.x, figure.y, 30, 20);
+                    g.fillRect(figure.x, figure.y, 30, 20);
                 }
                 else if (figure.name.equals("Квадрат")){
                     g.drawRect(figure.x, figure.y, 20, 20);
+                    g.fillRect(figure.x, figure.y, 20, 20);
                 }
                 figureCount++;
             }
@@ -146,8 +165,32 @@ class Figures extends Frame implements Observer, ActionListener, ItemListener {
                     break;
 
             }
+            switch(speedChoice.getSelectedIndex()) {
+                case 0:
+                    setSpeed(100); // Очень медленно
+                    break;
+                case 1:
+                    setSpeed(50); // Медленно
+                    break;
+                case 2:
+                    setSpeed(20); // Средне
+                    break;
+                case 3:
+                    setSpeed(10); // Быстро
+                    break;
+                case 4:
+                    setSpeed(5); // Очень быстро
+                    break;
+            }
+
         }
         repaint();
+    }
+
+    private void setSpeed(int delay) {
+        for (Figure figure : LL) {
+            figure.setDelay(delay);
+        }
     }
 
     private void addBall(String name) {
@@ -158,12 +201,14 @@ class Figures extends Frame implements Observer, ActionListener, ItemListener {
 }
 
 class Figure extends Observable implements Runnable {
-    Thread thr;
+    Thread thread;
     private boolean xplus;
     private boolean yplus;
     int x;
     int y;
     Color color;
+    private int delay;
+
     String name;
 
     public Figure(Color color, String text, String name) {
@@ -174,8 +219,8 @@ class Figure extends Observable implements Runnable {
         this.color = color;
         this.name = name;
         Graphics.count++;
-        thr = new Thread(this, Graphics.count + ":" + text + ":");
-        thr.start();
+        thread = new Thread(this, Graphics.count + ":" + text + ":");
+        thread.start();
     }
 
     public void run() {
@@ -191,10 +236,14 @@ class Figure extends Observable implements Runnable {
             setChanged();
             notifyObservers(this);
             try {
-                Thread.sleep(10);
+                Thread.sleep(delay);
             } catch (InterruptedException e) {
             }
         }
+    }
+
+    public void setDelay(int delay) {
+        this.delay = delay;
     }
 }
 
