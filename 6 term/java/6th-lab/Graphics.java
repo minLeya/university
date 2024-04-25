@@ -1,12 +1,12 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.util.Random;
 
 public class Graphics {
-    static int count;
 
     public static void main(String[] args) {
-        count = 0;
+
         Figures figures = new Figures();
     }
 }
@@ -16,14 +16,14 @@ class Figures extends Frame implements Observer, ActionListener, ItemListener {
 
     private LinkedList<Figure> LL = new LinkedList<>();
     private Color color;
-
     private Frame mainWindow;
     private Button button;
     private Choice colorChoice;
     private Choice figureChoice;
     private Choice speedChoice;
-
-    private TextField tf;
+    private TextField idTF;
+    private TextField speedChangeTF;
+    private Button changeSpeedButton;
 
     Figures() {
         this.addWindowListener(new WindowAdapter2());
@@ -74,11 +74,29 @@ class Figures extends Frame implements Observer, ActionListener, ItemListener {
         speedChoice.addItem("Средне");
         speedChoice.addItem("Быстро");
         speedChoice.addItem("Очень быстро");
+        speedChoice.addItem("max");
         speedChoicePanel.add(speedChoice);
         mainWindow.add(speedChoicePanel);
 
-        tf = new TextField();
-        mainWindow.add(tf);
+        Panel idPanel = new Panel(new GridLayout(2, 1));
+        Label idLabel = new Label("ID: ");
+        idPanel.add(idLabel);
+        idTF = new TextField();
+        idPanel.add(idTF);
+        mainWindow.add(idPanel);
+
+        Panel speedChangePanel = new Panel(new GridLayout(2, 1));
+        Label speedChangeLabel = new Label("Скорость: ");
+        speedChangePanel.add(speedChangeLabel);
+        speedChangeTF = new TextField();
+        speedChangePanel.add(speedChangeTF);
+        mainWindow.add(speedChangePanel);
+
+        changeSpeedButton = new Button("Изменить скорость");
+        changeSpeedButton.setActionCommand("ChangeSpeed");
+        changeSpeedButton.addActionListener(this);
+        mainWindow.add(changeSpeedButton);
+
         mainWindow.setVisible(true);
         this.setSize(500, 200);
         this.setVisible(true);
@@ -99,33 +117,32 @@ class Figures extends Frame implements Observer, ActionListener, ItemListener {
                 if (figure.name.equals("Круг")) {
                     g.drawOval(figure.x, figure.y, 20, 20);
                     g.fillOval(figure.x, figure.y, 20, 20);
-                }
-                else if (figure.name.equals("Овал")) {
+                } else if (figure.name.equals("Овал")) {
                     g.drawOval(figure.x, figure.y, 30, 20);
                     g.fillOval(figure.x, figure.y, 30, 20);
-                }
-                else if (figure.name.equals("Треугольник")) {
+                } else if (figure.name.equals("Треугольник")) {
                     int[] xPoints = {figure.x + 10, figure.x + 20, figure.x};
                     int[] yPoints = {figure.y, figure.y + 20, figure.y + 20};
                     g.drawPolygon(xPoints, yPoints, 3);
                     g.fillPolygon(xPoints, yPoints, 3);
-                }
-                else if (figure.name.equals("Прямоугольник")) {
+                } else if (figure.name.equals("Прямоугольник")) {
                     g.drawRect(figure.x, figure.y, 30, 20);
                     g.fillRect(figure.x, figure.y, 30, 20);
-                }
-                else if (figure.name.equals("Квадрат")){
+                } else if (figure.name.equals("Квадрат")) {
                     g.drawRect(figure.x, figure.y, 20, 20);
                     g.fillRect(figure.x, figure.y, 20, 20);
                 }
+                g.setColor(Color.BLACK);
+                g.drawString(Integer.toString(figure.id), figure.x + 5, figure.y - 5);
+
                 figureCount++;
-            }
-            else break;
+            } else break;
         }
     }
 
     public void itemStateChanged(ItemEvent iE) {
     }
+
 
     public void actionPerformed(ActionEvent aE) {
         String str = aE.getActionCommand();
@@ -149,52 +166,71 @@ class Figures extends Frame implements Observer, ActionListener, ItemListener {
             }
             switch (figureChoice.getSelectedIndex()) {
                 case 0:
-                    addBall("Круг");
+                    addFigure("Круг");
                     break;
                 case 1:
-                    addBall("Овал");
+                    addFigure("Овал");
                     break;
                 case 2:
-                    addBall("Треугольник");
+                    addFigure("Треугольник");
                     break;
                 case 3:
-                    addBall("Квадрат");
+                    addFigure("Квадрат");
                     break;
                 case 4:
-                    addBall("Прямоугольник");
-                    break;
-
-            }
-            switch(speedChoice.getSelectedIndex()) {
-                case 0:
-                    setSpeed(100); // Очень медленно
-                    break;
-                case 1:
-                    setSpeed(50); // Медленно
-                    break;
-                case 2:
-                    setSpeed(20); // Средне
-                    break;
-                case 3:
-                    setSpeed(10); // Быстро
-                    break;
-                case 4:
-                    setSpeed(5); // Очень быстро
+                    addFigure("Прямоугольник");
                     break;
             }
-
+        } else if (str.equals("ChangeSpeed")) {
+            try {
+                int figureId = Integer.parseInt(idTF.getText());
+                int newSpeed = Integer.parseInt(speedChangeTF.getText());
+                changeFigureSpeed(figureId, newSpeed);
+            } catch (NumberFormatException | NullPointerException ex) {
+                ex.printStackTrace();
+            }
         }
+
         repaint();
     }
 
-    private void setSpeed(int delay) {
+    private void changeFigureSpeed(int figureId, int newSpeed) {
         for (Figure figure : LL) {
-            figure.setDelay(delay);
+            if (figure.id == figureId) {
+                figure.setDelay(newSpeed);
+                break;
+            }
         }
     }
 
-    private void addBall(String name) {
-        Figure figure = new Figure(color, this.tf.getText(), name);
+    private int getSpeed() {
+        int delay = 0;
+        switch (speedChoice.getSelectedIndex()) {
+            case 0:
+                delay = 100;
+                break;
+            case 1:
+                delay = 50;
+                break;
+            case 2:
+                delay = 20;
+                break;
+            case 3:
+                delay = 10;
+                break;
+            case 4:
+                delay = 5;
+                break;
+            case 5:
+                delay = 3;
+                break;
+        }
+        return delay;
+    }
+
+    private void addFigure(String name) {
+        int delay = getSpeed();
+        Figure figure = new Figure(color, name, delay);
         LL.add(figure);
         figure.addObserver(this);
     }
@@ -208,27 +244,41 @@ class Figure extends Observable implements Runnable {
     int y;
     Color color;
     private int delay;
-
     String name;
+    int id;
+    private static int idCounter = 0;
 
-    public Figure(Color color, String text, String name) {
+    public Figure(Color color, String name, int delay) {
         xplus = true;
         yplus = true;
         x = 0;
         y = 30;
         this.color = color;
         this.name = name;
-        Graphics.count++;
-        thread = new Thread(this, Graphics.count + ":" + text + ":");
+        this.delay = delay;
+        id = idCounter;
+        idCounter++;
+        thread = new Thread(this, id + ":");
         thread.start();
     }
 
     public void run() {
+
+        Random random = new Random();
+
+        // случайные начальные координаты
+        x = random.nextInt(30) + 20;
+        y = random.nextInt(30) + 20;
+
+        // случайные начальные направления
+        xplus = random.nextBoolean();
+        yplus = random.nextBoolean();
+
         while (true) {
             if (x == 475) xplus = false;
-            if (x == -1) xplus = true;
+            if (x == 0) xplus = true;
             if (y == 175) yplus = false;
-            if (y == 29) yplus = true;
+            if (y == 20) yplus = true;
             if (xplus) x++;
             else x--;
             if (yplus) y++;
@@ -238,10 +288,10 @@ class Figure extends Observable implements Runnable {
             try {
                 Thread.sleep(delay);
             } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }
-
     public void setDelay(int delay) {
         this.delay = delay;
     }
