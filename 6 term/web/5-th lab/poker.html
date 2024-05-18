@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Poker Game</title>
+</head>
+<body>
+  <h1>Poker Game</h1>
+  <button onclick="dealHand()">Deal Hand</button>
+  <div id="hand"></div>
+  <p id="result"></p>
+
+  <script>
+    const suits = ['♥', '♦', '♣', '♠'];
+    const ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+
+    function getRandomCard() {
+      const suit = suits[Math.floor(Math.random() * suits.length)];
+      const rank = ranks[Math.floor(Math.random() * ranks.length)];
+      return { suit, rank };
+    }
+
+    function dealHand() {
+      const hand = [];
+      for (let i = 0; i < 5; i++) {
+        hand.push(getRandomCard());
+      }
+      
+      if (hand.length > 5) {
+        hand.splice(5); // Удалить лишние карты, если их больше 5
+      }
+      
+      displayHand(hand);
+      checkHand(hand);
+    }
+
+    function displayHand(hand) {
+      const handDiv = document.getElementById('hand');
+      handDiv.innerHTML = '';
+      // Преобразует каждую карту из массива hand в строку HTML с помощью map
+      const cards = hand.map(card => `<div class="card"><span>${card.rank}${card.suit}</span></div>`);
+      handDiv.innerHTML = cards.join('');
+    }
+
+    function checkHand(hand) {
+      try {
+        const ranksCount = {};
+        const suitsCount = {};
+        hand.forEach(card => {
+          ranksCount[card.rank] = ranksCount[card.rank] ? ranksCount[card.rank] + 1 : 1;
+          suitsCount[card.suit] = suitsCount[card.suit] ? suitsCount[card.suit] + 1 : 1;
+        });
+
+        const suits = Object.keys(suitsCount);
+
+        if (suits.length !== 1) {
+          throw new Error("No flush");
+        } else {
+          document.getElementById('result').textContent = 'Flush'; //  флеш — пять карт одной и той же масти;
+        }
+      } catch (error) {
+        document.getElementById('result').textContent = error.message;
+      } finally {
+        //
+      }
+    }
+  </script>
+</body>
+</html>

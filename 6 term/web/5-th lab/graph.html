@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Function Graph</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        canvas {
+            border: 1px solid black;
+        }
+
+        .controls {
+            margin-top: 10px;
+        }
+
+        button {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="graphCanvas" width="400" height="500"></canvas>
+    <div class="controls">
+        <button onclick="zoomIn()">Zoom In</button>
+        <button onclick="zoomOut()">Zoom Out</button>
+        <button onclick="moveLeft()">Left</button>
+        <button onclick="moveRight()">Right</button>
+        <button onclick="moveUp()">Up</button>
+        <button onclick="moveDown()">Down</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('graphCanvas');
+        const ctx = canvas.getContext('2d');
+        let scale = parseFloat(new URLSearchParams(window.location.search).get('scale')) || 1;
+        let shiftX = 0, shiftY = 0;
+
+        function drawGrid() {
+            const width = canvas.width;
+            const height = canvas.height;
+            const spacing = 50;
+
+            ctx.clearRect(0, 0, width, height);
+
+            ctx.beginPath();
+            ctx.strokeStyle = '#ccc';
+            ctx.setLineDash([5, 3]);
+
+            for (let x = 0; x <= width; x += spacing) {
+                ctx.moveTo(x + shiftX % spacing, 0);
+                ctx.lineTo(x + shiftX % spacing, height);
+            }
+
+            for (let y = 0; y <= height; y += spacing) {
+                ctx.moveTo(0, y + shiftY % spacing);
+                ctx.lineTo(width, y + shiftY % spacing);
+            }
+
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            ctx.beginPath();
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 1;
+            ctx.moveTo(width / 2 + shiftX, 0);
+            ctx.lineTo(width / 2 + shiftX, height);
+            ctx.moveTo(0, height / 2 + shiftY);
+            ctx.lineTo(width, height / 2 + shiftY);
+            ctx.stroke();
+        }
+
+        function drawFunction() {
+            ctx.beginPath();
+            ctx.strokeStyle = 'red';
+            ctx.lineWidth = 2;
+
+            let first = true;
+            for (let x = -canvas.width / 2; x < canvas.width / 2; x++) {
+                let xCoord = (x + shiftX) / scale;
+                let yCoord = (2 - Math.pow(x, 3)) * scale;
+                if (first) {
+                    ctx.moveTo(canvas.width / 2 + x * scale + shiftX, canvas.height / 2 - yCoord + shiftY);
+                    first = false;
+                } else {
+                    ctx.lineTo(canvas.width / 2 + x * scale + shiftX, canvas.height / 2 - yCoord + shiftY);
+                }
+            }
+            ctx.stroke();
+        }
+
+        function zoomIn() {
+            scale *= 1.1;
+            redraw();
+        }
+
+        function zoomOut() {
+            scale /= 1.1;
+            redraw();
+        }
+
+        function moveLeft() {
+            shiftX -= 30;
+            redraw();
+        }
+
+        function moveRight() {
+            shiftX += 30;
+            redraw();
+        }
+
+        function moveUp() {
+            shiftY -= 30;
+            redraw();
+        }
+
+        function moveDown() {
+            shiftY += 30;
+            redraw();
+        }
+
+        function redraw() {
+            drawGrid();
+            drawFunction();
+        }
+
+        redraw();
+    </script>
+</body>
+</html>
