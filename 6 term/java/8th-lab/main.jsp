@@ -36,6 +36,6 @@
         }
         session.setAttribute("trigger", trigger);
     %>
-    <p>Счётчик посещений: <%= counter %></p>
+    <p>Счётчик посещений: <jsp:getProperty name="sortBean" property="counter" /> </p>
 </body>
 </html>

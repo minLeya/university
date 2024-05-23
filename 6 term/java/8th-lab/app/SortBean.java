@@ -1,12 +1,24 @@
-
 package app;
-
 
 import java.util.Arrays;
 
 public class SortBean {
+    private int counter;
     private String sequence;
     private int[] sortedNumbers;
+
+    public SortBean() {
+        counter = 0;
+    }
+
+    public int getCounter() {
+        return counter;
+    }
+
+    // Метод для установки значения счетчика
+    public void setCounter(int counter) {
+        this.counter = counter;
+    }
 
     public String getSequence() {
         return sequence;
@@ -17,6 +29,7 @@ public class SortBean {
         processSequence();
     }
 
+    // обработка последовательности
     private void processSequence() {
         if (sequence != null && !sequence.isEmpty()) {
             String[] numberStrings = sequence.split(",");
@@ -25,9 +38,11 @@ public class SortBean {
                 sortedNumbers[i] = Integer.parseInt(numberStrings[i].trim());
             }
             Arrays.sort(sortedNumbers);
+            counter++;
         }
     }
 
+    // отсортированные числа
     public int[] getSortedNumbers() {
         return sortedNumbers;
     }
