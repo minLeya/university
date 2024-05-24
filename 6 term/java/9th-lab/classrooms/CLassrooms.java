@@ -10,7 +10,7 @@ public class CLassrooms extends JPanel implements ActionListener {
 
     private static final int WINDOW_WIDTH = 800;
     private static final int WINDOW_HEIGHT = 600;
-    private static final String DB_URL = "jdbc:derby:Classrooms;create=true";
+    private static final String DB_URL = "jdbc:derby:class;create=true";
     private static final String USER_NAME = "db_user";
     private static final String USER_PASSWORD = "db_user";
     private Connection conn;
@@ -19,14 +19,13 @@ public class CLassrooms extends JPanel implements ActionListener {
     private JTable classroomTable;
     private JTable responsibleTable;
     
-    
-    // Default values for CLASSROOM table
+    // дефолтные занчения для таблицы CLASSROOM
     private static final String DEFAULT_BUILDING = "Default Building";
     private static final String DEFAULT_CLASSROOM_NUMBER = "000";
     private static final String DEFAULT_CLASSROOM_NAME = "Default Name";
     private static final int DEFAULT_SQUARE = 50;
 
-    // Default values for RESPONSIBLE table
+    // дефолтные занчения для таблицы RESPONSIBLE 
     private static final String DEFAULT_SURNAME = "Default Surname";
     private static final String DEFAULT_NAME = "Default Name";
     private static final String DEFAULT_PATRONYMIC = "Default Patronymic";
@@ -34,8 +33,7 @@ public class CLassrooms extends JPanel implements ActionListener {
     private static final int DEFAULT_TELEPHONE = 1234567890;
     private static final int DEFAULT_AGE = 30;
 
-  
-
+ 
     // конструктор
     public CLassrooms() {
         setLayout(new BorderLayout());
@@ -49,7 +47,7 @@ public class CLassrooms extends JPanel implements ActionListener {
         JButton resetButton = new JButton("Дефолтные значения");
         JButton buildingSortButton = new JButton("Сортировать по зданиям");
         JButton phoneDirectoryButton = new JButton("Телефонный справочник");
-        JButton averageAreaButton = new JButton("Средняя площадь ответственного");
+        JButton averageAreaButton = new JButton("Средняя площадь ответственных");
         
         
         showButton.addActionListener(this);
@@ -125,7 +123,7 @@ public class CLassrooms extends JPanel implements ActionListener {
             case "Телефонный справочник":
                 showPhoneDirectory();
                 break;
-            case "Средняя площадь ответсвенного":
+            case "Средняя площадь ответственных":
                 showAverageArea();
                 break;
             case "Дефолтные значения":
@@ -262,13 +260,11 @@ public class CLassrooms extends JPanel implements ActionListener {
             return;
         }
 
-        // Get classroom ID from the selected row
         int classroomId = Integer.parseInt(classroomTableModel.getValueAt(selectedRow, 0).toString());
 
         JDialog dialog = new JDialog((Frame) null, "Редактировать запись", true);
         dialog.setLayout(new GridLayout(0, 2));
 
-        // Classroom fields
         JTextField idField = new JTextField(classroomTableModel.getValueAt(selectedRow, 0).toString());
         JTextField buildingField = new JTextField(classroomTableModel.getValueAt(selectedRow, 1).toString());
         JTextField classroomNumberField = new JTextField(classroomTableModel.getValueAt(selectedRow, 2).toString());
@@ -286,7 +282,6 @@ public class CLassrooms extends JPanel implements ActionListener {
         dialog.add(new JLabel("Площадь:"));
         dialog.add(squareField);
 
-        // Fetch the responsible data associated with this classroom ID
         JTextField surnameField = new JTextField();
         JTextField nameField = new JTextField();
         JTextField patronymicField = new JTextField();
@@ -310,7 +305,6 @@ public class CLassrooms extends JPanel implements ActionListener {
             ex.printStackTrace();
         }
 
-        // Add Responsible fields to the dialog
         dialog.add(new JLabel("Фамилия:"));
         dialog.add(surnameField);
         dialog.add(new JLabel("Имя:"));
@@ -327,7 +321,6 @@ public class CLassrooms extends JPanel implements ActionListener {
         JButton editButton = new JButton("Сохранить");
         editButton.addActionListener(e -> {
             try {
-                // Update classroom data
                 PreparedStatement stmtClassroom = conn.prepareStatement("UPDATE CLASSROOM SET BUILDING=?, CLASSROOM_NUMBER=?, CLASSROOM_NAME=?, SQUARE=? WHERE ID_CLASSROOM=?");
                 stmtClassroom.setString(1, buildingField.getText());
                 stmtClassroom.setString(2, classroomNumberField.getText());
@@ -336,7 +329,6 @@ public class CLassrooms extends JPanel implements ActionListener {
                 stmtClassroom.setInt(5, classroomId);
                 stmtClassroom.executeUpdate();
 
-                // Update responsible data
                 PreparedStatement stmtResponsible = conn.prepareStatement("UPDATE RESPONSIBLE SET SURNAME=?, NAME=?, PATRONYMIC=?, POST=?, TELEPHONE=?, AGE=? WHERE ID_RESPONSIBLE=?");
                 stmtResponsible.setString(1, surnameField.getText());
                 stmtResponsible.setString(2, nameField.getText());
@@ -361,63 +353,74 @@ public class CLassrooms extends JPanel implements ActionListener {
 
     // удаление - сделано
     private void deleteSelectedData() {
-        int selectedRow = classroomTable.getSelectedRow();
-        int selectedRowResponsible = responsibleTable.getSelectedRow();
-        if (selectedRow == -1 || selectedRowResponsible == -1) {
-            JOptionPane.showMessageDialog(this, "Пожалуйста, выберите запись для удаления", "Ошибка", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        int idClassroom = (int) classroomTableModel.getValueAt(selectedRow, 0);
-        int idResponsible = (int) responsibleTableModel.getValueAt(selectedRowResponsible, 0);
-        try {
-            if (idClassroom == idResponsible){
-                PreparedStatement stmt = conn.prepareStatement("DELETE FROM CLASSROOM WHERE ID_CLASSROOM=?");
-                stmt.setInt(1, idClassroom);
-                stmt.executeUpdate();
-
-                PreparedStatement stmtResponsible = conn.prepareStatement("DELETE FROM RESPONSIBLE WHERE ID_RESPONSIBLE=?");
-                stmtResponsible.setInt(1, idResponsible);
-                stmtResponsible.executeUpdate();
-
-                showAllData();
+            int selectedRow = classroomTable.getSelectedRow();
+            int selectedRowResponsible = responsibleTable.getSelectedRow();
+            if (selectedRow == -1 || selectedRowResponsible == -1) {
+                JOptionPane.showMessageDialog(this, "Пожалуйста, выберите запись для удаления", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                return;
             }
-            else {
-                JOptionPane.showMessageDialog(this, "Пожалуйста, выберите записи с одним ID", "Ошибка", JOptionPane.ERROR_MESSAGE);
+            int idClassroom = (int) classroomTableModel.getValueAt(selectedRow, 0);
+            int idResponsible = (int) responsibleTableModel.getValueAt(selectedRowResponsible, 0);
+            try {
+                if (idClassroom == idResponsible){
+                    // Начало транзакции
+                    conn.setAutoCommit(false);
+
+                    PreparedStatement stmt = conn.prepareStatement("DELETE FROM CLASSROOM WHERE ID_CLASSROOM=?");
+                    stmt.setInt(1, idClassroom);
+                    stmt.executeUpdate();
+
+                    PreparedStatement stmtResponsible = conn.prepareStatement("DELETE FROM RESPONSIBLE WHERE ID_RESPONSIBLE=?");
+                    stmtResponsible.setInt(1, idResponsible);
+                    stmtResponsible.executeUpdate();
+
+                    // Завершение транзакции
+                    conn.commit();
+
+                    showAllData();
+                }
+                else {
+                    JOptionPane.showMessageDialog(this, "Пожалуйста, выберите записи с одним ID", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                }
+
+            } catch (SQLException ex) {
+                try {
+                    // Откат транзакции в случае ошибки
+                    conn.rollback();
+                } catch (SQLException rollbackEx) {
+                    rollbackEx.printStackTrace();
+                }
+                ex.printStackTrace();
+            } finally {
+                try {
+                    conn.setAutoCommit(true);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
             }
-            
-        } catch (SQLException ex) {
-            ex.printStackTrace();
         }
-    }
     
-    // сортировка зданий
+    // сортировка зданий - сделано
     private void buildingSort() {
         try {
-            // Prepare the query to fetch and sort the building names
             String query = "SELECT BUILDING FROM CLASSROOM ORDER BY BUILDING";
             PreparedStatement stmt = conn.prepareStatement(query);
             ResultSet rs = stmt.executeQuery();
 
-            // Create a DefaultTableModel for displaying the buildings
             DefaultTableModel buildingTableModel = new DefaultTableModel(new String[]{"Здание"}, 0);
 
-            // Populate the model with data from the result set
             while (rs.next()) {
                 buildingTableModel.addRow(new Object[]{rs.getString("BUILDING")});
             }
 
-            // Create a JTable to display the buildings
             JTable buildingTable = new JTable(buildingTableModel);
 
-            // Put the table in a scroll pane
             JScrollPane scrollPane = new JScrollPane(buildingTable);
 
-            // Create a dialog to show the buildings
             JDialog dialog = new JDialog((Frame) null, "Сортировка зданий", true);
             dialog.setLayout(new BorderLayout());
             dialog.add(scrollPane, BorderLayout.CENTER);
 
-            // Set the size and make the dialog visible
             dialog.setSize(300, 400);
             dialog.setVisible(true);
 
@@ -426,18 +429,15 @@ public class CLassrooms extends JPanel implements ActionListener {
         }
     }
     
-    //телефонный справочник
+    // телефонный справочник - сделано
     private void showPhoneDirectory() {
         try {
-            // Prepare the query to fetch the responsible person's data sorted by surname, name, patronymic
             String query = "SELECT SURNAME, NAME, PATRONYMIC, TELEPHONE FROM RESPONSIBLE ORDER BY SURNAME, NAME, PATRONYMIC";
             PreparedStatement stmt = conn.prepareStatement(query);
             ResultSet rs = stmt.executeQuery();
 
-            // Create a DefaultTableModel for the phone directory
             DefaultTableModel phoneDirectoryModel = new DefaultTableModel(new String[]{"Фамилия", "Имя", "Отчество", "Телефон"}, 0);
 
-            // Populate the model with data from the result set
             while (rs.next()) {
                 phoneDirectoryModel.addRow(new Object[]{
                     rs.getString("SURNAME"),
@@ -447,18 +447,14 @@ public class CLassrooms extends JPanel implements ActionListener {
                 });
             }
 
-            // Create a JTable to display the phone directory
             JTable phoneDirectoryTable = new JTable(phoneDirectoryModel);
 
-            // Put the table in a scroll pane
             JScrollPane scrollPane = new JScrollPane(phoneDirectoryTable);
 
-            // Create a dialog to show the phone directory
             JDialog dialog = new JDialog((Frame) null, "Телефонный справочник", true);
             dialog.setLayout(new BorderLayout());
             dialog.add(scrollPane, BorderLayout.CENTER);
 
-            // Set the size and make the dialog visible
             dialog.setSize(500, 400);
             dialog.setVisible(true);
 
@@ -467,63 +463,45 @@ public class CLassrooms extends JPanel implements ActionListener {
         }
     }
 
-    // среднее 
-   private void showAverageArea() {
-        // Получаем индекс выбранной строки в таблице ResponsibleTable
-        int selectedRow = responsibleTable.getSelectedRow();
-
-        // Проверяем, что выбранная строка действительно существует
-        if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "Пожалуйста, выберите ответственного", "Ошибка", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
+    // средняя площадь - сделано
+    private void showAverageArea() {
         try {
-            // Получаем ID выбранного ответственного
-            int responsibleId = (int) responsibleTableModel.getValueAt(selectedRow, 0);
-
-            // Выполняем запрос к базе данных, чтобы найти площади, закрепленные за выбранным ответственным
-            PreparedStatement stmt = conn.prepareStatement("SELECT SQUARE FROM CLASSROOM WHERE RESPONSIBLE_ID = ?");
-            stmt.setInt(1, responsibleId);
-            ResultSet rs = stmt.executeQuery();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT SQUARE FROM CLASSROOM");
 
             int totalSquare = 0;
-            int classroomCount = 0;
+            int responsibleCount = 0;
 
-            // Считаем общую площадь и количество аудиторий
             while (rs.next()) {
                 totalSquare += rs.getInt("SQUARE");
-                classroomCount++;
+                responsibleCount++;
             }
 
-            // Вычисляем среднюю площадь, если есть аудитории, закрепленные за выбранным ответственным
-            if (classroomCount > 0) {
-                double averageSquare = (double) totalSquare / classroomCount;
-                JOptionPane.showMessageDialog(this, "Средняя площадь, закрепленная за выбранным ответственным: " + averageSquare, "Средняя площадь", JOptionPane.INFORMATION_MESSAGE);
+            if (responsibleCount > 0) {
+                double averageSquare = (double) totalSquare / responsibleCount;
+                JOptionPane.showMessageDialog(this, "Средняя площадь, закрепленная за ответственными: " + averageSquare, "Средняя площадь", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                JOptionPane.showMessageDialog(this, "Нет данных о площадях, закрепленных за выбранным ответственным", "Средняя площадь", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Нет данных о площадях, закрепленных за ответственными", "Средняя площадь", JOptionPane.INFORMATION_MESSAGE);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-   // сброс к дефолтным значениям
+    // сброс к дефолтным значениям - сделано
     private void defaultValues() {
         int selectedClassroomRow = classroomTable.getSelectedRow();
         int selectedResponsibleRow = responsibleTable.getSelectedRow();
 
-        if (selectedClassroomRow == -1 && selectedResponsibleRow == -1) {
+        if (selectedClassroomRow == -1  || selectedResponsibleRow == -1) {
             JOptionPane.showMessageDialog(this, "Пожалуйста, выберите запись для сброса", "Ошибка", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         try {
             if (selectedClassroomRow != -1) {
-                // Получаем ID выбранной аудитории
                 int classroomId = (int) classroomTableModel.getValueAt(selectedClassroomRow, 0);
 
-                // Обновляем запись в таблице CLASSROOM значениями по умолчанию
                 String updateClassroomSQL = "UPDATE CLASSROOM SET BUILDING = ?, CLASSROOM_NUMBER = ?, CLASSROOM_NAME = ?, SQUARE = ? WHERE ID_CLASSROOM = ?";
                 PreparedStatement stmtClassroom = conn.prepareStatement(updateClassroomSQL);
                 stmtClassroom.setString(1, DEFAULT_BUILDING);
@@ -535,10 +513,8 @@ public class CLassrooms extends JPanel implements ActionListener {
             }
 
             if (selectedResponsibleRow != -1) {
-                // Получаем ID выбранного ответственного
                 int responsibleId = (int) responsibleTableModel.getValueAt(selectedResponsibleRow, 0);
 
-                // Обновляем запись в таблице RESPONSIBLE значениями по умолчанию
                 String updateResponsibleSQL = "UPDATE RESPONSIBLE SET SURNAME = ?, NAME = ?, PATRONYMIC = ?, POST = ?, TELEPHONE = ?, AGE = ? WHERE ID_RESPONSIBLE = ?";
                 PreparedStatement stmtResponsible = conn.prepareStatement(updateResponsibleSQL);
                 stmtResponsible.setString(1, DEFAULT_SURNAME);
@@ -551,7 +527,6 @@ public class CLassrooms extends JPanel implements ActionListener {
                 stmtResponsible.executeUpdate();
             }
 
-            // Обновление данных в таблицах на форме
             showAllData();
 
             JOptionPane.showMessageDialog(this, "Запись сброшена к значениям по умолчанию", "Сброс значений", JOptionPane.INFORMATION_MESSAGE);
@@ -561,3 +536,29 @@ public class CLassrooms extends JPanel implements ActionListener {
         }
     }
 }
+
+
+/*
+   private void deleteSelectedData() {
+        try {
+            // Удаляем все записи из таблицы CLASSROOM
+            String deleteClassroomSQL = "DELETE FROM CLASSROOM";
+            PreparedStatement stmtClassroom = conn.prepareStatement(deleteClassroomSQL);
+            stmtClassroom.executeUpdate();
+
+            // Удаляем все записи из таблицы RESPONSIBLE
+            String deleteResponsibleSQL = "DELETE FROM RESPONSIBLE";
+            PreparedStatement stmtResponsible = conn.prepareStatement(deleteResponsibleSQL);
+            stmtResponsible.executeUpdate();
+
+            // Обновление данных в таблицах на форме
+            showAllData();
+
+            JOptionPane.showMessageDialog(this, "Все записи удалены из обеих таблиц", "Удаление записей", JOptionPane.INFORMATION_MESSAGE);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Ошибка при удалении записей", "Ошибка", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+*/
