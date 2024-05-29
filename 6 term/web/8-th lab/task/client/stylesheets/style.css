@@ -1,0 +1,147 @@
+
+
+/*Блок заголовка*/
+.headbar {
+    width: 100%;
+    background-color: #45503B;
+    color: #F8F1E5;
+    padding: 20px;
+    text-align: center;
+}
+
+    .headbar h1 {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 30px;
+    }
+
+/* Стили для вкладок */
+.tabs a span {
+    display: inline-block;
+    border-radius: 5px 5px 0 0;
+    width: 100px;
+    margin-right: 10px;
+    text-align: center;
+    background: #ddd;
+    padding: 5px;
+}
+
+    .tabs a span.active {
+        background-color: #333;
+        color: #fff;
+    }
+
+
+.content {
+    margin: 5px;
+}
+
+
+.infoClass {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f2f2f2;
+    margin-bottom: 20px;
+}
+
+    .infoClass h4 {
+        padding: 10px;
+        background-color: rgba(255, 192, 252, 0.622);
+   
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    .infoClass p {
+       
+        padding: 10px;
+        color: #b1e9d0;
+        margin-bottom: 5px;
+    }
+
+    .infoClass ul {
+        padding: 0 0 0 20px;
+    }
+
+        .infoClass ul li {
+            list-style-type: square;
+            margin-bottom: 5px;
+            color: #007bff;
+        }
+
+
+#dataForm {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    width: 300px;
+}
+
+    #dataForm label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    #dataForm input[type="text"],
+    #dataForm input[type="date"] {
+        width: calc(100% - 10px);
+        padding: 5px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+    }
+
+    #dataForm button {
+        padding: 8px 15px;
+        margin-right: 10px;
+        border: none;
+        border-radius: 3px;
+        background-color: rgb(234, 95, 215);
+        color: #fff;
+        cursor: pointer;
+    }
+
+
+h2 {
+    margin-top: 20px;
+    font-size: 1.5em;
+    color: #333;
+}
+
+
+#dataTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    #dataTable th,
+    #dataTable td {
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    #dataTable th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+        text-align: left;
+    }
+
+    #dataTable td {
+        text-align: left;
+    }
+
+    #dataTable .btn {
+        padding: 5px 10px;
+        border: none;
+        border-radius: 3px;
+        background-color: rgb(234, 95, 215);
+        color: #fff;
+        cursor: pointer;
+    }
+
+       
+
+       
+
+
