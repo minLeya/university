@@ -111,22 +111,22 @@ class Perceptron_default:
         return self.forward(X)
 
 
-class Perceptron_third:
-    def __init__(self, input_size, hidden_size, output_size, learning_rate=0.001, beta=0.9, epsilon=1e-8):
+# Модель с обновлениями (Adam)
+class Perceptron_update:
+    def __init__(self, input_size, hidden_size, output_size, learning_rate=0.001, beta1=0.9, beta2=0.999, epsilon=1e-8, lambda_reg=0.01):
         self.W1 = np.random.randn(input_size, hidden_size) * 0.1
         self.b1 = np.zeros((1, hidden_size))
         self.W2 = np.random.randn(hidden_size, output_size) * 0.1
         self.b2 = np.zeros((1, output_size))
         self.learning_rate = learning_rate
-        self.beta = beta  # коэффициент для скользящего среднего
-        self.epsilon = epsilon  # для предотвращения деления на ноль
-        
-        # Сохраняем скользящее среднее квадратов градиентов
-        self.s_W1 = np.zeros_like(self.W1)
-        self.s_b1 = np.zeros_like(self.b1)
-        self.s_W2 = np.zeros_like(self.W2)
-        self.s_b2 = np.zeros_like(self.b2)
-        
+        self.beta1 = beta1
+        self.beta2 = beta2
+        self.epsilon = epsilon
+        self.lambda_reg = lambda_reg
+        self.m_W1, self.v_W1 = np.zeros_like(self.W1), np.zeros_like(self.W1)
+        self.m_b1, self.v_b1 = np.zeros_like(self.b1), np.zeros_like(self.b1)
+        self.m_W2, self.v_W2 = np.zeros_like(self.W2), np.zeros_like(self.W2)
+        self.m_b2, self.v_b2 = np.zeros_like(self.b2), np.zeros_like(self.b2)
         self.loss = 1
         self.train_losses = []
         self.test_losses = []
@@ -148,22 +148,36 @@ class Perceptron_third:
         m = X.shape[0]
         error = output - y
         dZ2 = error
-        dW2 = np.dot(self.A1.T, dZ2) / m
+        dW2 = np.dot(self.A1.T, dZ2) / m + self.lambda_reg * self.W2 / m
         db2 = np.sum(dZ2, axis=0, keepdims=True) / m
         dZ1 = np.dot(dZ2, self.W2.T) * self.relu_derivative(self.A1)
-        dW1 = np.dot(X.T, dZ1) / m
+        dW1 = np.dot(X.T, dZ1) / m + self.lambda_reg * self.W1 / m
         db1 = np.sum(dZ1, axis=0, keepdims=True) / m
 
-        # RMSprop обновление
-        self.s_W1 = self.beta * self.s_W1 + (1 - self.beta) * (dW1 ** 2)
-        self.s_b1 = self.beta * self.s_b1 + (1 - self.beta) * (db1 ** 2)
-        self.s_W2 = self.beta * self.s_W2 + (1 - self.beta) * (dW2 ** 2)
-        self.s_b2 = self.beta * self.s_b2 + (1 - self.beta) * (db2 ** 2)
+        self.m_W1 = self.beta1 * self.m_W1 + (1 - self.beta1) * dW1
+        self.v_W1 = self.beta2 * self.v_W1 + (1 - self.beta2) * (dW1 ** 2)
+        self.m_b1 = self.beta1 * self.m_b1 + (1 - self.beta1) * db1
+        self.v_b1 = self.beta2 * self.v_b1 + (1 - self.beta2) * (db1 ** 2)
 
-        self.W1 -= self.learning_rate * dW1 / (np.sqrt(self.s_W1) + self.epsilon)
-        self.b1 -= self.learning_rate * db1 / (np.sqrt(self.s_b1) + self.epsilon)
-        self.W2 -= self.learning_rate * dW2 / (np.sqrt(self.s_W2) + self.epsilon)
-        self.b2 -= self.learning_rate * db2 / (np.sqrt(self.s_b2) + self.epsilon)
+        self.m_W2 = self.beta1 * self.m_W2 + (1 - self.beta1) * dW2
+        self.v_W2 = self.beta2 * self.v_W2 + (1 - self.beta2) * (dW2 ** 2)
+        self.m_b2 = self.beta1 * self.m_b2 + (1 - self.beta1) * db2
+        self.v_b2 = self.beta2 * self.v_b2 + (1 - self.beta2) * (db2 ** 2)
+
+        m_W1_hat = self.m_W1 / (1 - self.beta1)
+        v_W1_hat = self.v_W1 / (1 - self.beta2)
+        m_b1_hat = self.m_b1 / (1 - self.beta1)
+        v_b1_hat = self.v_b1 / (1 - self.beta2)
+
+        m_W2_hat = self.m_W2 / (1 - self.beta1)
+        v_W2_hat = self.v_W2 / (1 - self.beta2)
+        m_b2_hat = self.m_b2 / (1 - self.beta1)
+        v_b2_hat = self.v_b2 / (1 - self.beta2)
+
+        self.W1 -= self.learning_rate * m_W1_hat / (np.sqrt(v_W1_hat) + self.epsilon)
+        self.b1 -= self.learning_rate * m_b1_hat / (np.sqrt(v_b1_hat) + self.epsilon)
+        self.W2 -= self.learning_rate * m_W2_hat / (np.sqrt(v_W2_hat) + self.epsilon)
+        self.b2 -= self.learning_rate * m_b2_hat / (np.sqrt(v_b2_hat) + self.epsilon)
 
     def train(self, X, y, X_test, y_test, stop_losses, epochs=1000):
         epoch = 0
@@ -187,11 +201,11 @@ class Perceptron_third:
 
             epoch += 1
 
-    def save_weights(self, filename="weights_third.npz"):
+    def save_weights(self, filename="weights_update.npz"):
         np.savez(filename, W1=self.W1, b1=self.b1, W2=self.W2, b2=self.b2)
         print(f"Веса сохранены в {filename}")
 
-    def load_weights(self, filename="weights_third.npz"):
+    def load_weights(self, filename="weights_update.npz"):
         data = np.load(filename)
         self.W1 = data['W1']
         self.b1 = data['b1']
@@ -204,16 +218,15 @@ class Perceptron_third:
 
 
 # Основная часть для тренировки обеих моделей
-stop_losses = 48e-4
+stop_losses = 5e-3
 
 # Обучаем модель с дефолтными параметрами
 model_default = Perceptron_default(X_train.shape[1], 10, 1, 0.01)
 model_default.train(X_train, y_train, X_test, y_test, stop_losses)
 
 # Обучаем модель с обновлениями
-model_third = Perceptron_third(X_train.shape[1], 10, 1, 0.001)
-model_third.train(X_train, y_train, X_test, y_test, stop_losses)
-
+model_update = Perceptron_update(X_train.shape[1], 10, 1, 0.01, epochs=3000000)
+model_update.train(X_train, y_train, X_test, y_test, stop_losses)
 
 # Графики
 plt.figure(figsize=(10, 8))
@@ -228,7 +241,7 @@ plt.title('Train Loss (default)')
 
 # 2. Лосс второй модели на трейне
 plt.subplot(2, 2, 2)
-plt.plot(model_third.train_losses, label='Train Loss (update)')
+plt.plot(model_update.train_losses, label='Train Loss (update)')
 plt.legend()
 plt.xlabel('Epochs')
 plt.ylabel('Loss')
@@ -245,14 +258,12 @@ plt.title('Train and Test Loss (default)')
 
 # 4. Лосс второй модели на трейне и тесте
 plt.subplot(2, 2, 4)
-plt.plot(model_third.train_losses, label='Train Loss (update)')
-plt.plot(model_third.test_losses, label='Test Loss (update)')
+plt.plot(model_update.train_losses, label='Train Loss (update)')
+plt.plot(model_update.test_losses, label='Test Loss (update)')
 plt.legend()
 plt.xlabel('Epochs')
 plt.ylabel('Loss')
 plt.title('Train and Test Loss (update)')
-
-
 
 plt.tight_layout()
 plt.show()
